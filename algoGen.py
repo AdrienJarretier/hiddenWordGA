@@ -2,7 +2,6 @@ from subprocess import check_output
 import random
 import numpy
 import json
-import path
 import time
 import sys
 import os
@@ -16,7 +15,7 @@ import os
 # - 31744 - 2252 - 7
 
 R_SEED = int.from_bytes(os.urandom(2), sys.byteorder)
-#R_SEED = 30542
+# R_SEED = 58443
 print(R_SEED)
 random.seed(R_SEED)
 
@@ -165,7 +164,7 @@ while bestInd[1] < 1:
             {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
         print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
 
-    if genCount % 100 == 0:
+    if genCount % 1000 == 0:
         bg = thisBestInd[0]
         bf = thisBestInd[1]
         print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
@@ -201,5 +200,8 @@ data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': R_SEED}
 TRACES_DIR = 'traces'
 filename = str(GROUP_NUM)+'_(' + \
     genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(R_SEED)+'.json'
-json.dump(data, open(path.join(TRACES_DIR, filename), 'w'))
-print('save at', filename)
+
+SAVE_PATH = os.path.join(TRACES_DIR, filename)
+
+json.dump(data, open(SAVE_PATH, 'w'))
+print('save at', SAVE_PATH)

@@ -2,6 +2,7 @@ from subprocess import check_output
 import random
 import numpy
 import json
+import path
 import time
 import sys
 import os
@@ -185,6 +186,7 @@ print('in time',time.time()-start_time,'seconds')
 print(R_SEED)
 
 data = {'obsels':obsels,'group_num':GROUP_NUM,'seed':R_SEED}
+TRACES_DIR = 'traces'
 filename = str(GROUP_NUM)+'_('+genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(R_SEED)+'.json'
-json.dump(data,open(filename,'w'))
+json.dump(data,open(path.join(TRACES_DIR, filename),'w'))
 print('save at',filename)

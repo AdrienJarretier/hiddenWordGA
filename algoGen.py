@@ -112,72 +112,102 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    start_time = time.time()
+    maxTime = 23
+    bestPop = 70
 
-    population = generateRandomPopulation(POP_SIZE)
+    for POP_SIZE in range(80, 1, -1):
 
-    bestInd = [None, 0]
+        resetRNG()
 
-    genCount = 0
+        print(POP_SIZE)
 
-    obsels = []
+        start_time = time.time()
 
-    while bestInd[1] < 1:
+        population = generateRandomPopulation(POP_SIZE)
 
-        genCount += 1
+        bestInd = [None, 0]
 
-        bestIndex = fullFitness(population)
+        genCount = 0
 
-        thisBestInd = population[bestIndex]
-        if thisBestInd[1] > bestInd[1]:
-            bestInd = thisBestInd
-            phenotype = genToPhen(bestInd[0])
-            fitness = bestInd[1]
-            obsels.append(
-                {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
-            print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
+        obsels = []
 
-        if genCount % 1000 == 0:
-            bg = thisBestInd[0]
-            bf = thisBestInd[1]
-            print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
+        while bestInd[1] < 1 and time.time() - start_time < maxTime:
 
-        selected = wheel_select(population, PARENTS_SELECTED_SIZE)
+            genCount += 1
 
-        newPop = []
+            bestIndex = fullFitness(population)
 
-        while len(newPop) < POP_SIZE:
-            mum = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
-            dad = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
+            thisBestInd = population[bestIndex]
+            if thisBestInd[1] > bestInd[1]:
+                bestInd = thisBestInd
+                phenotype = genToPhen(bestInd[0])
+                fitness = bestInd[1]
+                obsels.append(
+                    {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
+                print('new best:', phenotype,
+                      '(', bestInd[1], ',', genCount, ')')
 
-            if random.random() < CROSS_OVER_PROB:
-                c1, c2 = cross_over(mum[0], dad[0])
-                mum[0] = c1
-                dad[0] = c2
+            if genCount % 1000 == 0:
+                bg = thisBestInd[0]
+                bf = thisBestInd[1]
+                print('the best:', genToPhen(bg), '(', bf, end='')
+                print(', generation #', end='')
+                print(genCount, ')')
 
-            mum = [mutate(mum[0], MUTATION_RATE), 0]
-            dad = [mutate(dad[0], MUTATION_RATE), 0]
+            selected = wheel_select(population, PARENTS_SELECTED_SIZE)
 
-            newPop += [mum, dad]
-        fullFitness(newPop)
+            newPop = []
 
-        bigPop = sort_population(population + newPop)
-        population = bigPop[:POP_SIZE]
-        random.shuffle(population)
+            while len(newPop) < POP_SIZE:
+                mum = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
+                dad = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
 
-    print()
-    print('found', genToPhen(bestInd[0]))
-    print('in time', time.time()-start_time, 'seconds')
-    printSeed()
+                if random.random() < CROSS_OVER_PROB:
+                    c1, c2 = cross_over(mum[0], dad[0])
+                    mum[0] = c1
+                    dad[0] = c2
 
-    if SAVE_TRACE:
+                mum = [mutate(mum[0], MUTATION_RATE), 0]
+                dad = [mutate(dad[0], MUTATION_RATE), 0]
 
-        data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
-        TRACES_DIR = 'traces'
-        filename = str(GROUP_NUM)+'_(' + \
-            genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(USED_SEED)+'.json'
+                newPop += [mum, dad]
+            fullFitness(newPop)
 
-        SAVE_PATH = os.path.join(TRACES_DIR, filename)
+            bigPop = sort_population(population + newPop)
+            population = bigPop[:POP_SIZE]
+            random.shuffle(population)
 
-        json.dump(data, open(SAVE_PATH, 'w'))
-        print('save at', SAVE_PATH)
+        if bestInd[1] == 1:
+
+            print()
+            print('found', genToPhen(bestInd[0]))
+
+            runTime = time.time()-start_time
+
+            maxTime = runTime
+            bestPop = POP_SIZE
+
+            print('in time', runTime, 'seconds')
+            printSeed()
+
+            if SAVE_TRACE:
+
+                data = {'obsels': obsels,
+                        'group_num': GROUP_NUM, 'seed': USED_SEED}
+                TRACES_DIR = 'traces'
+                filename = str(GROUP_NUM)+'_(' + \
+                    genToPhen(bestInd[0])+')_'+str(genCount) + \
+                    '_'+str(USED_SEED)+'.json'
+
+                SAVE_PATH = os.path.join(TRACES_DIR, filename)
+
+                json.dump(data, open(SAVE_PATH, 'w'))
+                print('save at', SAVE_PATH)
+
+        else:
+
+            print()
+            print('timeout')
+
+    print('bestPop :', bestPop)
+    print('maxTime :', maxTime)

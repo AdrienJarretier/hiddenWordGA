@@ -112,10 +112,10 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    maxTime = 23
-    bestPop = 70
+    maxTime = 4.633208274841309*2
+    bestPop = 139
 
-    for POP_SIZE in range(80, 1, -1):
+    for POP_SIZE in range(139, 198):
 
         resetRNG()
 

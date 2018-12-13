@@ -25,12 +25,13 @@ def fullFitness(genPopulation):
     fullOut = fullOut.decode()
     allOut = fullOut.split('\r\n')
     scores = []
-    for i in range(len(allOut)-1):
+    for i in range(len(allOut) - 1):
         out = allOut[i]
         score = float(out.split('\t')[1])
         scores.append(score)
         genPopulation[genIndexSorted[i]][1] = score
     return numpy.argmax(scores)
+
 
 # ------------------------------------------------------
 
@@ -44,8 +45,9 @@ def genToPhen(genotype):
 def generateRandom():
     genotype = []
     for i in range(GENOTYPE_LENGTH):
-        genotype.append(random.randint(0, SIZE_CHOICES-1))
+        genotype.append(random.randint(0, SIZE_CHOICES - 1))
     return genotype
+
 
 # ------------------------------------------------------
 
@@ -55,9 +57,10 @@ def mutate(genotype, chance):
     for i in range(len(genotype)):
         char = genotype[i]
         if random.random() < chance:
-            char = random.randint(0, SIZE_CHOICES-1)
+            char = random.randint(0, SIZE_CHOICES - 1)
         newGen.append(char)
     return newGen
+
 
 # ------------------------------------------------------
 
@@ -65,7 +68,7 @@ def mutate(genotype, chance):
 def cross_over(g1, g2):
     child1 = []
     child2 = []
-    cutter = random.randint(0, len(g1)-1)
+    cutter = random.randint(0, len(g1) - 1)
     for i in range(0, len(g1)):
         c1 = g1[i]
         c2 = g2[i]
@@ -76,14 +79,17 @@ def cross_over(g1, g2):
         child2.append(c2)
     return child1, child2
 
+
 # ------------------------------------------------------
 
 
 def wheel_select(pop, count):
     weights = list(map(lambda x: x[1], pop))
-    indexs = random.choices(
-        [i for i in range(len(pop))], weights=weights, k=count)
+    indexs = random.choices([i for i in range(len(pop))],
+                            weights=weights,
+                            k=count)
     return list(map(lambda x: pop[x], indexs))
+
 
 # ------------------------------------------------------
 
@@ -102,9 +108,7 @@ def sort_population(pop):
 # ------------------------------------------------------
 # ------------------------------------------------------
 
-
 # ------------------------------------------------------
-
 
 if __name__ == '__main__':
 
@@ -133,22 +137,27 @@ if __name__ == '__main__':
             bestInd = thisBestInd
             phenotype = genToPhen(bestInd[0])
             fitness = bestInd[1]
-            obsels.append(
-                {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
+            obsels.append({
+                'individu': phenotype,
+                'generation': genCount,
+                'fitness': fitness
+            })
             print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
 
         if genCount % 1000 == 0:
             bg = thisBestInd[0]
             bf = thisBestInd[1]
-            print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
+            print('the best:', genToPhen(bg), '(', bf, end='')
+            print(', generation #', end='')
+            print(genCount, ')')
 
         selected = wheel_select(population, PARENTS_SELECTED_SIZE)
 
         newPop = []
 
         while len(newPop) < POP_SIZE:
-            mum = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
-            dad = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
+            mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+            dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
 
             if random.random() < CROSS_OVER_PROB:
                 c1, c2 = cross_over(mum[0], dad[0])
@@ -167,7 +176,13 @@ if __name__ == '__main__':
 
     print()
     print('found', genToPhen(bestInd[0]))
-    print('in time', time.time()-start_time, 'seconds')
+
+    runTime = time.time() - start_time
+
+    maxTime = runTime
+    bestPop = POP_SIZE
+
+    print('in time', runTime, 'seconds')
     printSeed()
 
     if SAVE_TRACE:
@@ -175,9 +190,13 @@ if __name__ == '__main__':
         data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
         TRACES_DIR = 'traces'
         filename = str(GROUP_NUM)+'_(' + \
-            genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(USED_SEED)+'.json'
+            genToPhen(bestInd[0])+')_'+str(genCount) + \
+            '_'+str(USED_SEED)+'.json'
 
         SAVE_PATH = os.path.join(TRACES_DIR, filename)
 
         json.dump(data, open(SAVE_PATH, 'w'))
         print('save at', SAVE_PATH)
+
+    print('bestPop :', bestPop)
+    print('maxTime :', maxTime)

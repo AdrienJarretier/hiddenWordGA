@@ -15,7 +15,7 @@ import sys
 
 USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
-USED_SEED = 388279633733923904574047398755986705022040457603
+# USED_SEED = 583581761348884047384480420104860010890843096924
 
 
 def printSeed():
@@ -27,9 +27,13 @@ def printSeed():
     print()
 
 
-printSeed()
+def resetRNG():
 
-random.seed(USED_SEED)
+    printSeed()
+    random.seed(USED_SEED)
+
+
+resetRNG()
 
 
 def getFullChoices():
@@ -47,6 +51,8 @@ GENOTYPE_LENGTH = WORD_LEN
 FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
                            '2018-2019') + '_fitness_windows.exe'
 
+# POP_SIZE = 139 # 388279633733923904574047398755986705022040457603
+# POP_SIZE = 195  # 583581761348884047384480420104860010890843096924
 POP_SIZE = 167
 
 PARENTS_SELECTED_SIZE = int(POP_SIZE / 2)
@@ -58,7 +64,7 @@ MUTATION_RATE = 0.2
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
-SAVE_TRACE = False
+SAVE_TRACE = True
 
 
 # def randomChromosome():

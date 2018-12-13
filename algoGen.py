@@ -1,23 +1,10 @@
+from common import *
+
 from subprocess import check_output
-import random
+
 import numpy
 import json
 import time
-import sys
-import os
-
-# seed sympas:
-# - 236957502862991091183765 - 23794
-# - 46255 - 3225 - 7
-# - 42474 - 17728 - 9
-# - 30542 - 17837 - 1
-# - 30542 - 17837 - 1
-# - 31744 - 2252 - 7
-
-R_SEED = int.from_bytes(os.urandom(2), sys.byteorder)
-# R_SEED = 58443
-print(R_SEED)
-random.seed(R_SEED)
 
 
 def fullFitness(genPopulation):
@@ -46,13 +33,6 @@ def fullFitness(genPopulation):
     return numpy.argmax(scores)
 
 # ------------------------------------------------------
-
-
-def getFullChoices():
-    return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789___'
-
-
-SIZE_CHOICES = len(getFullChoices())
 
 
 def genToPhen(genotype):
@@ -122,86 +102,80 @@ def sort_population(pop):
 # ------------------------------------------------------
 # ------------------------------------------------------
 
-FITNESS_PROGAM = 'ibi_2018-2019_fitness_windows.exe'
-GENOTYPE_LENGTH = 12
-
-import sys
-
-GROUP_NUM = int(sys.argv[1])
-
-print('Searching for group number', GROUP_NUM, '...')
-
-POP_SIZE = 80
-SELECT_ELITES_SIZE = int(POP_SIZE*0.5)
-
-CROSS_OVER_PROB = 0.5
-MUTATE_PROB_PER_GENE = 0.2
 
 # ------------------------------------------------------
 
-start_time = time.time()
 
-population = generateRandomPopulation(POP_SIZE)
+if __name__ == '__main__':
 
-bestInd = [None, 0]
+    print()
+    print(' --- Finding hidden word with a genetic algorithm --- ')
+    print()
 
-genCount = 0
+    start_time = time.time()
 
-obsels = []
+    population = generateRandomPopulation(POP_SIZE)
 
-while bestInd[1] < 1:
+    bestInd = [None, 0]
 
-    genCount += 1
+    genCount = 0
 
-    bestIndex = fullFitness(population)
+    obsels = []
 
-    thisBestInd = population[bestIndex]
-    if thisBestInd[1] > bestInd[1]:
-        bestInd = thisBestInd
-        phenotype = genToPhen(bestInd[0])
-        fitness = bestInd[1]
-        obsels.append(
-            {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
-        print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
+    while bestInd[1] < 1:
 
-    if genCount % 1000 == 0:
-        bg = thisBestInd[0]
-        bf = thisBestInd[1]
-        print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
+        genCount += 1
 
-    selected = wheel_select(population, SELECT_ELITES_SIZE)
+        bestIndex = fullFitness(population)
 
-    newPop = []
+        thisBestInd = population[bestIndex]
+        if thisBestInd[1] > bestInd[1]:
+            bestInd = thisBestInd
+            phenotype = genToPhen(bestInd[0])
+            fitness = bestInd[1]
+            obsels.append(
+                {'individu': phenotype, 'generation': genCount, 'fitness': fitness})
+            print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
 
-    while len(newPop) < POP_SIZE:
-        mum = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
-        dad = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
+        if genCount % 1000 == 0:
+            bg = thisBestInd[0]
+            bf = thisBestInd[1]
+            print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
 
-        if random.random() < CROSS_OVER_PROB:
-            c1, c2 = cross_over(mum[0], dad[0])
-            mum[0] = c1
-            dad[0] = c2
+        selected = wheel_select(population, SELECT_ELITES_SIZE)
 
-        mum = [mutate(mum[0], MUTATE_PROB_PER_GENE), 0]
-        dad = [mutate(dad[0], MUTATE_PROB_PER_GENE), 0]
+        newPop = []
 
-        newPop += [mum, dad]
-    fullFitness(newPop)
+        while len(newPop) < POP_SIZE:
+            mum = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
+            dad = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
 
-    bigPop = sort_population(population + newPop)
-    population = bigPop[:POP_SIZE]
-    random.shuffle(population)
+            if random.random() < CROSS_OVER_PROB:
+                c1, c2 = cross_over(mum[0], dad[0])
+                mum[0] = c1
+                dad[0] = c2
 
-print('found', genToPhen(bestInd[0]))
-print('in time', time.time()-start_time, 'seconds')
-print(R_SEED)
+            mum = [mutate(mum[0], MUTATE_PROB_PER_GENE), 0]
+            dad = [mutate(dad[0], MUTATE_PROB_PER_GENE), 0]
 
-data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': R_SEED}
-TRACES_DIR = 'traces'
-filename = str(GROUP_NUM)+'_(' + \
-    genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(R_SEED)+'.json'
+            newPop += [mum, dad]
+        fullFitness(newPop)
 
-SAVE_PATH = os.path.join(TRACES_DIR, filename)
+        bigPop = sort_population(population + newPop)
+        population = bigPop[:POP_SIZE]
+        random.shuffle(population)
 
-json.dump(data, open(SAVE_PATH, 'w'))
-print('save at', SAVE_PATH)
+    print()
+    print('found', genToPhen(bestInd[0]))
+    print('in time', time.time()-start_time, 'seconds')
+    printSeed()
+
+    data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
+    TRACES_DIR = 'traces'
+    filename = str(GROUP_NUM)+'_(' + \
+        genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(USED_SEED)+'.json'
+
+    SAVE_PATH = os.path.join(TRACES_DIR, filename)
+
+    json.dump(data, open(SAVE_PATH, 'w'))
+    print('save at', SAVE_PATH)

@@ -7,18 +7,47 @@ import json
 import time
 
 
+class Individual:
+    def __init__(self, chromosome):
+
+        self.chromosome = chromosome[:]
+
+        self.fitness = 0
+
+        # self.fitness = getFitness_external(self)
+
+    def copy(self):
+
+        indivCopy = Individual(self.chromosome)
+
+        indivCopy.fitness = self.fitness
+
+        return indivCopy
+
+    def __repr__(self):
+
+        return self.toPhenotype() + ' ( ' + str(bestInd.fitness) + ' )'
+
+    def toPhenotype(self):
+
+        choices = getFullChoices()
+        phenotype = ''.join(list(map(lambda x: choices[x], self.chromosome)))
+
+        return phenotype
+
+
 def fullFitness(genPopulation):
     genIndexSorted = []
     for i in range(len(genPopulation)):
-        if genPopulation[i][1] == 0:
+        if genPopulation[i].fitness == 0:
             genIndexSorted.append(i)
 
     if len(genIndexSorted) == 0:
-        return numpy.argmax(list(map(lambda x: x[1], genPopulation)))
+        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation)))
 
     com = [FITNESS_PROGAM, str(GROUP_NUM)]
     for genIndex in genIndexSorted:
-        phen = genToPhen(genPopulation[genIndex][0])
+        phen = genPopulation[genIndex].toPhenotype()
         com.append(phen)
 
     fullOut = check_output(com)
@@ -29,22 +58,16 @@ def fullFitness(genPopulation):
         out = allOut[i]
         score = float(out.split('\t')[1])
         scores.append(score)
-        genPopulation[genIndexSorted[i]][1] = score
+        genPopulation[genIndexSorted[i]].fitness = score
     return numpy.argmax(scores)
 
 
 # ------------------------------------------------------
 
 
-def genToPhen(genotype):
-    choices = getFullChoices()
-    phen = ''.join(list(map(lambda x: choices[x], genotype)))
-    return phen
-
-
 def generateRandom():
     genotype = []
-    for i in range(GENOTYPE_LENGTH):
+    for _ in range(GENOTYPE_LENGTH):
         genotype.append(random.randint(0, SIZE_CHOICES - 1))
     return genotype
 
@@ -84,7 +107,7 @@ def cross_over(g1, g2):
 
 
 def wheel_select(pop, count):
-    weights = list(map(lambda x: x[1], pop))
+    weights = list(map(lambda x: x.fitness, pop))
     indexs = random.choices([i for i in range(len(pop))],
                             weights=weights,
                             k=count)
@@ -97,12 +120,13 @@ def wheel_select(pop, count):
 def generateRandomPopulation(popSize):
     pop = []
     for i in range(popSize):
-        pop.append([generateRandom(), 0])
+        pop.append(Individual(generateRandom()))
+
     return pop
 
 
 def sort_population(pop):
-    return sorted(pop, key=lambda x: x[1], reverse=True)
+    return sorted(pop, key=lambda x: x.fitness, reverse=True)
 
 
 # ------------------------------------------------------
@@ -116,16 +140,16 @@ def nextGeneration(population):
     newPop = []
 
     while len(newPop) < POP_SIZE:
-        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
-        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)].copy()
+        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)].copy()
 
         if random.random() < CROSS_OVER_PROB:
-            c1, c2 = cross_over(mum[0], dad[0])
-            mum[0] = c1
-            dad[0] = c2
+            c1, c2 = cross_over(mum.chromosome, dad.chromosome)
+            mum.chromosome = c1
+            dad.chromosome = c2
 
-        mum = [mutate(mum[0], MUTATION_RATE), 0]
-        dad = [mutate(dad[0], MUTATION_RATE), 0]
+        mum = Individual(mutate(mum.chromosome, MUTATION_RATE))
+        dad = Individual(mutate(dad.chromosome, MUTATION_RATE))
 
         newPop += [mum, dad]
     fullFitness(newPop)
@@ -149,41 +173,46 @@ if __name__ == '__main__':
 
     population = generateRandomPopulation(POP_SIZE)
 
-    bestInd = [None, 0]
+    bestInd = Individual([])
 
     genCount = 0
 
     obsels = []
 
-    while bestInd[1] < 1:
+    while bestInd.fitness < 1:
 
         genCount += 1
 
         bestIndex = fullFitness(population)
 
         thisBestInd = population[bestIndex]
-        if thisBestInd[1] > bestInd[1]:
+
+        if thisBestInd.fitness > bestInd.fitness:
+
             bestInd = thisBestInd
-            phenotype = genToPhen(bestInd[0])
-            fitness = bestInd[1]
+
+            phenotype = bestInd.toPhenotype()
             obsels.append({
                 'individu': phenotype,
                 'generation': genCount,
-                'fitness': fitness
+                'fitness': bestInd.fitness
             })
-            print('new best:', phenotype, '(', bestInd[1], ',', genCount, ')')
+            print('new best:', bestInd, ',', genCount, ')')
 
         if genCount % 1000 == 0:
-            bg = thisBestInd[0]
-            bf = thisBestInd[1]
-            print('the best:', genToPhen(bg), '(', bf, end='')
+            print(
+                'the best:',
+                thisBestInd.toPhenotype(),
+                '(',
+                thisBestInd.fitness,
+                end='')
             print(', generation #', end='')
             print(genCount, ')')
 
         population = nextGeneration(population)
 
     print()
-    print('found', genToPhen(bestInd[0]))
+    print('found', bestInd.toPhenotype())
 
     runTime = time.time() - start_time
 
@@ -198,7 +227,7 @@ if __name__ == '__main__':
         data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
         TRACES_DIR = 'traces'
         filename = str(GROUP_NUM)+'_(' + \
-            genToPhen(bestInd[0])+')_'+str(genCount) + \
+            bestInd.toPhenotype()+')_'+str(genCount) + \
             '_'+str(USED_SEED)+'.json'
 
         SAVE_PATH = os.path.join(TRACES_DIR, filename)
@@ -206,5 +235,5 @@ if __name__ == '__main__':
         json.dump(data, open(SAVE_PATH, 'w'))
         print('save at', SAVE_PATH)
 
-    print('bestPop :', bestPop)
-    print('maxTime :', maxTime)
+    # print('bestPop :', bestPop)
+    # print('maxTime :', maxTime)

@@ -12,7 +12,6 @@ import sys
 # - 30542 - 17837 - 1
 # - 31744 - 2252 - 7
 
-
 USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
 # USED_SEED = 945342979285345395358338198468538210272098089853
@@ -44,7 +43,6 @@ def getFullChoices():
 
 SIZE_CHOICES = len(getFullChoices())
 
-
 WORD_LEN = 12
 GENOTYPE_LENGTH = WORD_LEN
 
@@ -60,12 +58,10 @@ PARENTS_SELECTED_SIZE = int(POP_SIZE / 2)
 CROSS_OVER_PROB = 0.5
 MUTATION_RATE = 0.2
 
-
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
 SAVE_TRACE = True
-
 
 # def randomChromosome():
 

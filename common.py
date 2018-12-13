@@ -15,7 +15,7 @@ import sys
 
 USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
-# usedSeed = 46255
+USED_SEED = 388279633733923904574047398755986705022040457603
 
 
 def printSeed():
@@ -49,22 +49,16 @@ FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
 
 POP_SIZE = 80
 
-SELECT_ELITES_SIZE = int(POP_SIZE*0.5)
+PARENTS_SELECTED_SIZE = int(POP_SIZE / 2)
 
 CROSS_OVER_PROB = 0.5
-MUTATE_PROB_PER_GENE = 0.2
+MUTATION_RATE = 0.2
 
-
-# ELECTED_COUNT = 1
 
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
-# MAX_FITNESS = 1
-
-# MUTATION_RATE = 20 / 100
-
-# PARENTS_SELECTED_SIZE = int(POPULATION_SIZE / 2)
+SAVE_TRACE = False
 
 
 # def randomChromosome():

@@ -142,21 +142,21 @@ if __name__ == '__main__':
             bf = thisBestInd[1]
             print('the best:', genToPhen(bg), '(', bf, ',', genCount, ')')
 
-        selected = wheel_select(population, SELECT_ELITES_SIZE)
+        selected = wheel_select(population, PARENTS_SELECTED_SIZE)
 
         newPop = []
 
         while len(newPop) < POP_SIZE:
-            mum = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
-            dad = selected[random.randint(0, SELECT_ELITES_SIZE-1)]
+            mum = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
+            dad = selected[random.randint(0, PARENTS_SELECTED_SIZE-1)]
 
             if random.random() < CROSS_OVER_PROB:
                 c1, c2 = cross_over(mum[0], dad[0])
                 mum[0] = c1
                 dad[0] = c2
 
-            mum = [mutate(mum[0], MUTATE_PROB_PER_GENE), 0]
-            dad = [mutate(dad[0], MUTATE_PROB_PER_GENE), 0]
+            mum = [mutate(mum[0], MUTATION_RATE), 0]
+            dad = [mutate(dad[0], MUTATION_RATE), 0]
 
             newPop += [mum, dad]
         fullFitness(newPop)
@@ -170,12 +170,14 @@ if __name__ == '__main__':
     print('in time', time.time()-start_time, 'seconds')
     printSeed()
 
-    data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
-    TRACES_DIR = 'traces'
-    filename = str(GROUP_NUM)+'_(' + \
-        genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(USED_SEED)+'.json'
+    if SAVE_TRACE:
 
-    SAVE_PATH = os.path.join(TRACES_DIR, filename)
+        data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
+        TRACES_DIR = 'traces'
+        filename = str(GROUP_NUM)+'_(' + \
+            genToPhen(bestInd[0])+')_'+str(genCount)+'_'+str(USED_SEED)+'.json'
 
-    json.dump(data, open(SAVE_PATH, 'w'))
-    print('save at', SAVE_PATH)
+        SAVE_PATH = os.path.join(TRACES_DIR, filename)
+
+        json.dump(data, open(SAVE_PATH, 'w'))
+        print('save at', SAVE_PATH)

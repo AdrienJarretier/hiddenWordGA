@@ -47,7 +47,7 @@ GENOTYPE_LENGTH = WORD_LEN
 FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
                            '2018-2019') + '_fitness_windows.exe'
 
-POP_SIZE = 80
+POP_SIZE = 167
 
 PARENTS_SELECTED_SIZE = int(POP_SIZE / 2)
 

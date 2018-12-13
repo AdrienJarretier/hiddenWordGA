@@ -108,6 +108,35 @@ def sort_population(pop):
 # ------------------------------------------------------
 # ------------------------------------------------------
 
+
+def nextGeneration(population):
+
+    selected = wheel_select(population, PARENTS_SELECTED_SIZE)
+
+    newPop = []
+
+    while len(newPop) < POP_SIZE:
+        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+
+        if random.random() < CROSS_OVER_PROB:
+            c1, c2 = cross_over(mum[0], dad[0])
+            mum[0] = c1
+            dad[0] = c2
+
+        mum = [mutate(mum[0], MUTATION_RATE), 0]
+        dad = [mutate(dad[0], MUTATION_RATE), 0]
+
+        newPop += [mum, dad]
+    fullFitness(newPop)
+
+    bigPop = sort_population(population + newPop)
+    newGeneration = bigPop[:POP_SIZE]
+    random.shuffle(newGeneration)
+
+    return newGeneration
+
+
 # ------------------------------------------------------
 
 if __name__ == '__main__':
@@ -151,28 +180,7 @@ if __name__ == '__main__':
             print(', generation #', end='')
             print(genCount, ')')
 
-        selected = wheel_select(population, PARENTS_SELECTED_SIZE)
-
-        newPop = []
-
-        while len(newPop) < POP_SIZE:
-            mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
-            dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
-
-            if random.random() < CROSS_OVER_PROB:
-                c1, c2 = cross_over(mum[0], dad[0])
-                mum[0] = c1
-                dad[0] = c2
-
-            mum = [mutate(mum[0], MUTATION_RATE), 0]
-            dad = [mutate(dad[0], MUTATION_RATE), 0]
-
-            newPop += [mum, dad]
-        fullFitness(newPop)
-
-        bigPop = sort_population(population + newPop)
-        population = bigPop[:POP_SIZE]
-        random.shuffle(population)
+        population = nextGeneration(population)
 
     print()
     print('found', genToPhen(bestInd[0]))

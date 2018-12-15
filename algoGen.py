@@ -16,14 +16,6 @@ class Individual:
 
         # self.fitness = getFitness_external(self)
 
-    def copy(self):
-
-        indivCopy = Individual(self.chromosome)
-
-        indivCopy.fitness = self.fitness
-
-        return indivCopy
-
     def __repr__(self):
 
         return self.toPhenotype() + ' ( ' + str(bestInd.fitness) + ' )'
@@ -135,13 +127,16 @@ def sort_population(pop):
 
 def nextGeneration(population):
 
+    if len(population) == 0:
+        return generateRandomPopulation(POP_SIZE)
+
     selected = wheel_select(population, PARENTS_SELECTED_SIZE)
 
     newPop = []
 
     while len(newPop) < POP_SIZE:
-        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)].copy()
-        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)].copy()
+        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
 
         if random.random() < CROSS_OVER_PROB:
             c1, c2 = cross_over(mum.chromosome, dad.chromosome)
@@ -171,7 +166,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    population = generateRandomPopulation(POP_SIZE)
+    population = []
 
     bestInd = Individual([])
 
@@ -180,6 +175,8 @@ if __name__ == '__main__':
     obsels = []
 
     while bestInd.fitness < 1:
+
+        population = nextGeneration(population)
 
         genCount += 1
 
@@ -209,10 +206,8 @@ if __name__ == '__main__':
             print(', generation #', end='')
             print(genCount, ')')
 
-        population = nextGeneration(population)
-
     print()
-    print('found', bestInd.toPhenotype())
+    print('found', bestInd)
 
     runTime = time.time() - start_time
 

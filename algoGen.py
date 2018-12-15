@@ -18,7 +18,7 @@ class Individual:
 
     def __repr__(self):
 
-        return self.toPhenotype() + ' ( ' + str(bestInd.fitness) + ' )'
+        return self.toPhenotype() + ' ( ' + str(self.fitness) + ' )'
 
     def toPhenotype(self):
 
@@ -158,11 +158,15 @@ def nextGeneration(population):
 
 # ------------------------------------------------------
 
-if __name__ == '__main__':
 
-    print()
-    print(' --- Finding hidden word with a genetic algorithm --- ')
-    print()
+def runGA(popSize):
+
+    global maxTime
+    global bestPop
+
+    print('POP_SIZE :', POP_SIZE)
+
+    resetRNG()
 
     start_time = time.time()
 
@@ -174,7 +178,7 @@ if __name__ == '__main__':
 
     obsels = []
 
-    while bestInd.fitness < 1:
+    while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
         population = nextGeneration(population)
 
@@ -206,16 +210,22 @@ if __name__ == '__main__':
             print(', generation #', end='')
             print(genCount, ')')
 
-    print()
-    print('found', bestInd)
+    if bestInd.fitness == 1:
 
-    runTime = time.time() - start_time
+        print()
+        print('found', bestInd)
 
-    maxTime = runTime
-    bestPop = POP_SIZE
+        runTime = time.time() - start_time
 
-    print('in time', runTime, 'seconds')
-    printSeed()
+        maxTime = runTime
+        bestPop = POP_SIZE
+
+        print('in time', runTime, 'seconds')
+        # printSeed()
+
+    else:
+
+        print('timeout')
 
     if SAVE_TRACE:
 
@@ -230,5 +240,30 @@ if __name__ == '__main__':
         json.dump(data, open(SAVE_PATH, 'w'))
         print('save at', SAVE_PATH)
 
-    # print('bestPop :', bestPop)
-    # print('maxTime :', maxTime)
+
+if __name__ == '__main__':
+
+    print()
+    print(' --- Finding hidden word with a genetic algorithm --- ')
+    print()
+
+    # for _ in range(4):
+    #     USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
+
+    
+
+    # maxTime = math.inf
+    maxTime = 39
+    bestPop = 0
+
+    minPop = int(sys.argv[2])
+    maxPop = int(sys.argv[3])
+
+    print('pop :', minPop, '-', maxPop)
+
+    for POP_SIZE in range(POP_SIZE, POP_SIZE+1):
+
+        runGA(POP_SIZE)
+
+    print('bestPop :', bestPop)
+    print('maxTime :', maxTime)

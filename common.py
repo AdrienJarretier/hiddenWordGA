@@ -14,29 +14,29 @@ import sys
 
 USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
-USED_SEED = 516965727647980285240122060590487863092577996099
+# USED_SEED = 516965727647980285240122060590487863092577996099
 
 # print()
 # print('seed : ', end='')
 # USED_SEED = int(input())
 
 
-def printSeed():
+def printSeed(usedSeed):
 
     print()
     print('-----------------------------------------------------------')
-    print('| seed :', USED_SEED, '|')
+    print('| seed :', usedSeed, '|')
     print('-----------------------------------------------------------')
     print()
 
 
-def resetRNG():
+def resetRNG(usedSeed):
 
-    printSeed()
-    random.seed(USED_SEED)
+    printSeed(usedSeed)
+    random.seed(usedSeed)
 
 
-resetRNG()
+resetRNG(USED_SEED)
 
 
 def getFullChoices():
@@ -55,9 +55,9 @@ FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
 
 popSizes = [
 
-    76, # 1246693330185985807830912950342831830252608934725
+    76,  # 1246693330185985807830912950342831830252608934725
     126,  # 825223724335007065240278192078841274655492415313
-    128, # 1374172824681245420414519898052264799487685467700
+    128,  # 1374172824681245420414519898052264799487685467700
     139,  # 388279633733923904574047398755986705022040457603
     195,  # 583581761348884047384480420104860010890843096924
     201  # 80653406655206812433266136065413654415375883151

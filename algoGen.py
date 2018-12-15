@@ -3,6 +3,7 @@ from common import *
 from subprocess import check_output
 
 import numpy
+import pprint
 import json
 import time
 
@@ -158,15 +159,13 @@ def nextGeneration(population):
 
 # ------------------------------------------------------
 
-
-def runGA(popSize):
-
-    global maxTime
-    global bestPop
-
-    print('POP_SIZE :', POP_SIZE)
-
-    resetRNG()
+# run the genetic algorithm with a given populaiton size and set a max run time
+#
+# popSize : populaiton size : int
+# maxTime : max run time in seconds : float
+#
+# return runtime or -1 if the function times out
+def runGA(popSize, maxTime):
 
     start_time = time.time()
 
@@ -175,6 +174,7 @@ def runGA(popSize):
     bestInd = Individual([])
 
     genCount = 0
+    lastGenPrint = genCount
 
     obsels = []
 
@@ -199,8 +199,9 @@ def runGA(popSize):
                 'fitness': bestInd.fitness
             })
             print('new best:', bestInd, ',', genCount, ')')
+            lastGenPrint = genCount
 
-        if genCount % 1000 == 0:
+        if genCount - lastGenPrint == 1000:
             print(
                 'the best:',
                 thisBestInd.toPhenotype(),
@@ -209,6 +210,7 @@ def runGA(popSize):
                 end='')
             print(', generation #', end='')
             print(genCount, ')')
+            lastGenPrint = genCount
 
     if bestInd.fitness == 1:
 
@@ -217,15 +219,14 @@ def runGA(popSize):
 
         runTime = time.time() - start_time
 
-        maxTime = runTime
-        bestPop = POP_SIZE
-
         print('in time', runTime, 'seconds')
         # printSeed()
 
+        return runTime
+
     else:
 
-        print('timeout')
+        return -1
 
     if SAVE_TRACE:
 
@@ -243,27 +244,54 @@ def runGA(popSize):
 
 if __name__ == '__main__':
 
+    pp = pprint.PrettyPrinter(indent=2)
+
     print()
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    # for _ in range(4):
-    #     USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
+    bestPop = POP_SIZE
 
-    
+    bestPops = []
+    bestTimes = []
 
-    # maxTime = math.inf
-    maxTime = 39
-    bestPop = 0
+    for _ in range(2):
 
-    minPop = int(sys.argv[2])
-    maxPop = int(sys.argv[3])
+        print()
+        print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
+        print('POP_SIZE :', POP_SIZE)
 
-    print('pop :', minPop, '-', maxPop)
+        USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
-    for POP_SIZE in range(POP_SIZE, POP_SIZE+1):
+        resetRNG(USED_SEED)
 
-        runGA(POP_SIZE)
+        maxTime = runGA(POP_SIZE, math.inf)
 
-    print('bestPop :', bestPop)
-    print('maxTime :', maxTime)
+        minPop = max(1, min(popSizes) - (max(popSizes) - min(popSizes)))
+        maxPop = max(popSizes) + (max(popSizes) - min(popSizes))
+
+        print('pop size range :', minPop, '-', maxPop)
+
+        for popSize in range(minPop, maxPop+1):
+
+            print()
+            print('popSize :', popSize)
+
+            runTime = runGA(popSize, maxTime)
+
+            if runTime != -1:
+                if runTime < maxTime:
+                    maxTime = runTime
+                    bestPop = popSize
+            else:
+                print('timeout')
+
+        bestPops.append('  ' + str(bestPop) + ', # ' + str(USED_SEED) + '  ')
+        bestTimes.append(maxTime)
+
+    print()
+    print('bestPops :')
+    pp.pprint(bestPops)
+    print()
+    print('bestTimes :')
+    pp.pprint(bestTimes)

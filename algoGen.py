@@ -244,6 +244,8 @@ def runGA(popSize, maxTime):
 
 if __name__ == '__main__':
 
+    mainTimeStart = time.time()
+
     pp = pprint.PrettyPrinter(indent=2)
 
     print()
@@ -255,7 +257,9 @@ if __name__ == '__main__':
     bestPops = []
     bestTimes = []
 
-    for _ in range(2):
+    mainRunTime = 32400
+
+    while time.time() - mainTimeStart < mainRunTime:
 
         print()
         print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')

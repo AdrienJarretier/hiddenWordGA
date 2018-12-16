@@ -129,20 +129,22 @@ def sort_population(pop):
 # ------------------------------------------------------
 
 
-def nextGeneration(population, mutationRate):
+def nextGeneration(population, mutationRate, crossoverProb, ratioSelectedParents):
+
+    parentsSelectedCount = int(POP_SIZE * ratioSelectedParents/100)
 
     if len(population) == 0:
         return generateRandomPopulation(POP_SIZE)
 
-    selected = wheel_select(population, PARENTS_SELECTED_SIZE)
+    selected = wheel_select(population, parentsSelectedCount)
 
     newPop = []
 
     while len(newPop) < POP_SIZE:
-        mum = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
-        dad = selected[random.randint(0, PARENTS_SELECTED_SIZE - 1)]
+        mum = selected[random.randint(0, parentsSelectedCount - 1)]
+        dad = selected[random.randint(0, parentsSelectedCount - 1)]
 
-        if random.random() < CROSS_OVER_PROB:
+        if random.random() < crossoverProb/100:
             c1, c2 = cross_over(mum.chromosome, dad.chromosome)
             mum.chromosome = c1
             dad.chromosome = c2
@@ -168,7 +170,7 @@ def nextGeneration(population, mutationRate):
 # maxTime : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
-def runGA(popSize, maxTime, mutationRate):
+def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     start_time = time.time()
 
@@ -183,7 +185,8 @@ def runGA(popSize, maxTime, mutationRate):
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
-        population = nextGeneration(population, mutationRate)
+        population = nextGeneration(
+            population, mutationRate, crossoverProb, ratioSelectedParents)
 
         genCount += 1
 
@@ -255,10 +258,10 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestMutationRates = []
+    bestRatiosParents = []
     bestTimes = []
 
-    mainRunTime = 32400
+    mainRunTime = 3600
 
     minLoopTime = 0
 
@@ -270,40 +273,49 @@ if __name__ == '__main__':
         print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
         print('POP_SIZE :', POP_SIZE)
         print('MUTATION_RATE :', MUTATION_RATE)
+        print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
+        print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
 
         USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
         resetRNG(USED_SEED)
 
-        maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE)
+        maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
+                        CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-        minMutationRate = max(0, min(mutationRates) -
-                              (max(mutationRates) - min(mutationRates)))
-        maxMutationRate = max(mutationRates) + \
-            (max(mutationRates) - min(mutationRates))
+        # minMutationRate = max(0, min(mutationRates) -
+        #                       (max(mutationRates) - min(mutationRates)))
+        # maxMutationRate = max(mutationRates) + \
+        #     (max(mutationRates) - min(mutationRates))
 
-        print('mutation rate range :', minMutationRate, '-', maxMutationRate)
+        minRatiosParents = 0
 
-        bestMutationRate = MUTATION_RATE
+        maxRatiosParents = 100
 
-        for mutationRate in range(minMutationRate, maxMutationRate+1):
+        print('ratios selected parents range :',
+              minRatiosParents, '-', maxRatiosParents)
+
+        bestRatio = RATIO_SELECTED_PARENTS
+
+        for ratioSelectedParents in range(minRatiosParents, minRatiosParents+1):
 
             resetRNG(USED_SEED)
 
             print()
-            print('mutationRate :', mutationRate)
+            print('ratioSelectedParents :', ratioSelectedParents)
 
-            runTime = runGA(POP_SIZE, maxTime, mutationRate)
+            runTime = runGA(POP_SIZE, maxTime, MUTATION_RATE,
+                            CROSS_OVER_PROB, ratioSelectedParents)
 
             if runTime != -1:
                 if runTime < maxTime:
                     maxTime = runTime
-                    bestMutationRate = mutationRate
+                    bestRatio = ratioSelectedParents
             else:
                 print('timeout')
 
-        bestMutationRates.append(
-            '   ' + str(bestMutationRate) + ', # ' + str(USED_SEED) + '   ')
+        bestRatiosParents.append(
+            '   ' + str(bestRatio) + ', # ' + str(USED_SEED) + '   ')
         bestTimes.append(maxTime)
 
         loopTime = time.time() - loopTimeStart
@@ -313,8 +325,8 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('bestMutationRates :')
-    pp.pprint(bestMutationRates)
+    print('bestRatiosParents :')
+    pp.pprint(bestRatiosParents)
     print()
     print('bestTimes :')
     pp.pprint(bestTimes)

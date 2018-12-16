@@ -68,7 +68,10 @@ def generateRandom():
 # ------------------------------------------------------
 
 
-def mutate(genotype, chance):
+def mutate(genotype, mutationRate):
+
+    chance = mutationRate / 100
+
     newGen = []
     for i in range(len(genotype)):
         char = genotype[i]
@@ -126,7 +129,7 @@ def sort_population(pop):
 # ------------------------------------------------------
 
 
-def nextGeneration(population):
+def nextGeneration(population, mutationRate):
 
     if len(population) == 0:
         return generateRandomPopulation(POP_SIZE)
@@ -144,8 +147,8 @@ def nextGeneration(population):
             mum.chromosome = c1
             dad.chromosome = c2
 
-        mum = Individual(mutate(mum.chromosome, MUTATION_RATE))
-        dad = Individual(mutate(dad.chromosome, MUTATION_RATE))
+        mum = Individual(mutate(mum.chromosome, mutationRate))
+        dad = Individual(mutate(dad.chromosome, mutationRate))
 
         newPop += [mum, dad]
     fullFitness(newPop)
@@ -165,7 +168,7 @@ def nextGeneration(population):
 # maxTime : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
-def runGA(popSize, maxTime):
+def runGA(popSize, maxTime, mutationRate):
 
     start_time = time.time()
 
@@ -180,7 +183,7 @@ def runGA(popSize, maxTime):
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
-        population = nextGeneration(population)
+        population = nextGeneration(population, mutationRate)
 
         genCount += 1
 
@@ -252,9 +255,7 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestPop = POP_SIZE
-
-    bestPops = []
+    bestMutationRates = []
     bestTimes = []
 
     mainRunTime = 32400
@@ -268,33 +269,41 @@ if __name__ == '__main__':
         print()
         print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
         print('POP_SIZE :', POP_SIZE)
+        print('MUTATION_RATE :', MUTATION_RATE)
 
         USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
         resetRNG(USED_SEED)
 
-        maxTime = runGA(POP_SIZE, math.inf)
+        maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE)
 
-        minPop = max(1, min(popSizes) - (max(popSizes) - min(popSizes)))
-        maxPop = max(popSizes) + (max(popSizes) - min(popSizes))
+        minMutationRate = max(0, min(mutationRates) -
+                              (max(mutationRates) - min(mutationRates)))
+        maxMutationRate = max(mutationRates) + \
+            (max(mutationRates) - min(mutationRates))
 
-        print('pop size range :', minPop, '-', maxPop)
+        print('mutation rate range :', minMutationRate, '-', maxMutationRate)
 
-        for popSize in range(minPop, maxPop+1):
+        bestMutationRate = MUTATION_RATE
+
+        for mutationRate in range(minMutationRate, maxMutationRate+1):
+
+            resetRNG(USED_SEED)
 
             print()
-            print('popSize :', popSize)
+            print('mutationRate :', mutationRate)
 
-            runTime = runGA(popSize, maxTime)
+            runTime = runGA(POP_SIZE, maxTime, mutationRate)
 
             if runTime != -1:
                 if runTime < maxTime:
                     maxTime = runTime
-                    bestPop = popSize
+                    bestMutationRate = mutationRate
             else:
                 print('timeout')
 
-        bestPops.append('  ' + str(bestPop) + ', # ' + str(USED_SEED) + '  ')
+        bestMutationRates.append(
+            '   ' + str(bestMutationRate) + ', # ' + str(USED_SEED) + '   ')
         bestTimes.append(maxTime)
 
         loopTime = time.time() - loopTimeStart
@@ -304,8 +313,8 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('bestPops :')
-    pp.pprint(bestPops)
+    print('bestMutationRates :')
+    pp.pprint(bestMutationRates)
     print()
     print('bestTimes :')
     pp.pprint(bestTimes)

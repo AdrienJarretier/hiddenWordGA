@@ -259,7 +259,11 @@ if __name__ == '__main__':
 
     mainRunTime = 32400
 
-    while time.time() - mainTimeStart < mainRunTime:
+    minLoopTime = 0
+
+    while time.time() - mainTimeStart < mainRunTime - minLoopTime:
+
+        loopTimeStart = time.time()
 
         print()
         print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
@@ -292,6 +296,12 @@ if __name__ == '__main__':
 
         bestPops.append('  ' + str(bestPop) + ', # ' + str(USED_SEED) + '  ')
         bestTimes.append(maxTime)
+
+        loopTime = time.time() - loopTimeStart
+
+        if minLoopTime == 0 or loopTime < minLoopTime:
+
+            minLoopTime = loopTime
 
     print()
     print('bestPops :')

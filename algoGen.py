@@ -288,7 +288,7 @@ if __name__ == '__main__':
         # maxMutationRate = max(mutationRates) + \
         #     (max(mutationRates) - min(mutationRates))
 
-        minRatiosParents = 0
+        minRatiosParents = 1
 
         maxRatiosParents = 100
 

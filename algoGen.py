@@ -261,7 +261,7 @@ if __name__ == '__main__':
     bestPopSizes = []
     bestTimes = []
 
-    mainRunTime = 1200
+    mainRunTime = 9*3600
 
     minLoopTime = 0
 
@@ -283,11 +283,11 @@ if __name__ == '__main__':
         maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                         CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-        minPopSize = 2
+        minPopSize = 0
 
-        maxPopSize = 7
+        maxPopSize = 100
 
-        print('pop size range :',
+        print('CROSS_OVER_PROB range :',
               minPopSize, '-', maxPopSize)
 
         bestPop = POP_SIZE
@@ -297,10 +297,10 @@ if __name__ == '__main__':
             resetRNG(USED_SEED)
 
             print()
-            print('popSize :', popSize)
+            print('CROSS_OVER_PROB :', popSize)
 
-            runTime = runGA(popSize, maxTime, CROSS_OVER_PROB,
-                            CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
+            runTime = runGA(POP_SIZE, maxTime, CROSS_OVER_PROB,
+                            popSize, RATIO_SELECTED_PARENTS)
 
             if runTime != -1:
                 if runTime < maxTime:
@@ -320,7 +320,7 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('bestPopSizes :')
+    print('best CROSS_OVER_PROB s :')
     pp.pprint(bestPopSizes)
     print()
     print('bestTimes :')

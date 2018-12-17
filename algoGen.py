@@ -258,7 +258,7 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestRatiosParents = []
+    bestCrossoverProbs = []
     bestTimes = []
 
     mainRunTime = 3600
@@ -283,39 +283,34 @@ if __name__ == '__main__':
         maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                         CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-        # minMutationRate = max(0, min(mutationRates) -
-        #                       (max(mutationRates) - min(mutationRates)))
-        # maxMutationRate = max(mutationRates) + \
-        #     (max(mutationRates) - min(mutationRates))
+        minCrossRate = 0
 
-        minRatiosParents = 1
+        maxCrossRate = 100
 
-        maxRatiosParents = 100
+        print('mutation rate range :',
+              minCrossRate, '-', maxCrossRate)
 
-        print('ratios selected parents range :',
-              minRatiosParents, '-', maxRatiosParents)
+        bestMut = MUTATION_RATE
 
-        bestRatio = RATIO_SELECTED_PARENTS
-
-        for ratioSelectedParents in range(minRatiosParents, minRatiosParents+1):
+        for crossRate in range(minCrossRate, maxCrossRate+1):
 
             resetRNG(USED_SEED)
 
             print()
-            print('ratioSelectedParents :', ratioSelectedParents)
+            print('mutRate :', crossRate)
 
-            runTime = runGA(POP_SIZE, maxTime, MUTATION_RATE,
-                            CROSS_OVER_PROB, ratioSelectedParents)
+            runTime = runGA(POP_SIZE, maxTime, crossRate,
+                            CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             if runTime != -1:
                 if runTime < maxTime:
                     maxTime = runTime
-                    bestRatio = ratioSelectedParents
+                    bestCrossRate = crossRate
             else:
                 print('timeout')
 
-        bestRatiosParents.append(
-            '   ' + str(bestRatio) + ', # ' + str(USED_SEED) + '   ')
+        bestCrossoverProbs.append(
+            '   ' + str(bestCrossRate) + ', # ' + str(USED_SEED) + '   ')
         bestTimes.append(maxTime)
 
         loopTime = time.time() - loopTimeStart
@@ -325,8 +320,8 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('bestRatiosParents :')
-    pp.pprint(bestRatiosParents)
+    print('bestMutationProbs :')
+    pp.pprint(bestCrossoverProbs)
     print()
     print('bestTimes :')
     pp.pprint(bestTimes)

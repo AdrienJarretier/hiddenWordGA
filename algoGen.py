@@ -129,18 +129,18 @@ def sort_population(pop):
 # ------------------------------------------------------
 
 
-def nextGeneration(population, mutationRate, crossoverProb, ratioSelectedParents):
+def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelectedParents):
 
-    parentsSelectedCount = int(POP_SIZE * ratioSelectedParents/100)
+    parentsSelectedCount = int(popSize * ratioSelectedParents/100)
 
     if len(population) == 0:
-        return generateRandomPopulation(POP_SIZE)
+        return generateRandomPopulation(popSize)
 
     selected = wheel_select(population, parentsSelectedCount)
 
     newPop = []
 
-    while len(newPop) < POP_SIZE:
+    while len(newPop) < popSize:
         mum = selected[random.randint(0, parentsSelectedCount - 1)]
         dad = selected[random.randint(0, parentsSelectedCount - 1)]
 
@@ -156,7 +156,7 @@ def nextGeneration(population, mutationRate, crossoverProb, ratioSelectedParents
     fullFitness(newPop)
 
     bigPop = sort_population(population + newPop)
-    newGeneration = bigPop[:POP_SIZE]
+    newGeneration = bigPop[:popSize]
     random.shuffle(newGeneration)
 
     return newGeneration
@@ -186,7 +186,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
         population = nextGeneration(
-            population, mutationRate, crossoverProb, ratioSelectedParents)
+            population, popSize, mutationRate, crossoverProb, ratioSelectedParents)
 
         genCount += 1
 
@@ -258,10 +258,10 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestCrossoverProbs = []
+    bestPopSizes = []
     bestTimes = []
 
-    mainRunTime = 3600
+    mainRunTime = 1200
 
     minLoopTime = 0
 
@@ -283,34 +283,34 @@ if __name__ == '__main__':
         maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                         CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-        minCrossRate = 0
+        minPopSize = 2
 
-        maxCrossRate = 100
+        maxPopSize = 7
 
-        print('mutation rate range :',
-              minCrossRate, '-', maxCrossRate)
+        print('pop size range :',
+              minPopSize, '-', maxPopSize)
 
-        bestMut = MUTATION_RATE
+        bestPop = POP_SIZE
 
-        for crossRate in range(minCrossRate, maxCrossRate+1):
+        for popSize in range(minPopSize, maxPopSize+1):
 
             resetRNG(USED_SEED)
 
             print()
-            print('mutRate :', crossRate)
+            print('popSize :', popSize)
 
-            runTime = runGA(POP_SIZE, maxTime, crossRate,
+            runTime = runGA(popSize, maxTime, CROSS_OVER_PROB,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             if runTime != -1:
                 if runTime < maxTime:
                     maxTime = runTime
-                    bestCrossRate = crossRate
+                    bestPop = popSize
             else:
                 print('timeout')
 
-        bestCrossoverProbs.append(
-            '   ' + str(bestCrossRate) + ', # ' + str(USED_SEED) + '   ')
+        bestPopSizes.append(
+            '   ' + str(bestPop) + ', # ' + str(USED_SEED) + '   ')
         bestTimes.append(maxTime)
 
         loopTime = time.time() - loopTimeStart
@@ -320,8 +320,8 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('bestMutationProbs :')
-    pp.pprint(bestCrossoverProbs)
+    print('bestPopSizes :')
+    pp.pprint(bestPopSizes)
     print()
     print('bestTimes :')
     pp.pprint(bestTimes)

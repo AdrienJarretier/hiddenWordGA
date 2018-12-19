@@ -271,9 +271,18 @@ if __name__ == '__main__':
 
     minLoopTime = 0
 
-    parameterUsedId = 0
+    ranges = [
+        [2, 2000],
+        [0, 100],
+        [0, 100],
+        [2, 100]
+    ]
 
-    while time.time() - mainTimeStart < mainRunTime - minLoopTime:
+    parameterUsedId = 0
+    minValue = ranges[parameterUsedId][0]
+    maxValue = ranges[parameterUsedId][1]
+
+    while len(bestValues) < 10:
 
         loopTimeStart = time.time()
 
@@ -292,10 +301,6 @@ if __name__ == '__main__':
 
         maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                         CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
-
-        minValue = 0
-
-        maxValue = 100
 
         print(parameters[parameterUsedId] +
               ' range :', minValue, '-', maxValue)

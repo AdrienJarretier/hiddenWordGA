@@ -278,70 +278,71 @@ if __name__ == '__main__':
         [2, 100]
     ]
 
-    parameterUsedId = 0
-    minValue = ranges[parameterUsedId][0]
-    maxValue = ranges[parameterUsedId][1]
+    for parameterUsedId in range(4):
 
-    while len(bestValues) < 10:
+        minValue = ranges[parameterUsedId][0]
+        maxValue = ranges[parameterUsedId][1]
 
-        loopTimeStart = time.time()
+        while len(bestValues) < 5:
 
-        print()
-        print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
-        print('POP_SIZE :', POP_SIZE)
-        print('MUTATION_RATE :', MUTATION_RATE)
-        print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
-        print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
-        print()
-        print('changin parameter : ' + parameters[parameterUsedId])
+            loopTimeStart = time.time()
 
-        USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
+            print()
+            print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
+            print('POP_SIZE :', POP_SIZE)
+            print('MUTATION_RATE :', MUTATION_RATE)
+            print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
+            print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
+            print()
+            print('changin parameter : ' + parameters[parameterUsedId])
 
-        resetRNG(USED_SEED)
-
-        maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
-                        CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
-
-        print(parameters[parameterUsedId] +
-              ' range :', minValue, '-', maxValue)
-
-        bestValue = parametersValues[parameterUsedId]
-
-        for v in range(minValue, maxValue+1):
-
-            vs = [POP_SIZE, MUTATION_RATE,
-                  CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
-
-            vs[parameterUsedId] = v
+            USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
             resetRNG(USED_SEED)
 
-            print()
-            print(parameters[parameterUsedId] + ' :', v)
+            maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
+                            CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-            runTime = runGA(vs[0], maxTime, vs[1],
-                            vs[2], vs[3])
+            print(parameters[parameterUsedId] +
+                  ' range :', minValue, '-', maxValue)
 
-            if runTime != -1:
-                if runTime < maxTime:
-                    maxTime = runTime
-                    bestValue = v
-            else:
-                print('timeout')
+            bestValue = parametersValues[parameterUsedId]
 
-        bestValues.append(
-            '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
-        bestTimes.append(maxTime)
+            for v in range(minValue, maxValue+1):
 
-        loopTime = time.time() - loopTimeStart
+                vs = [POP_SIZE, MUTATION_RATE,
+                      CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
 
-        if minLoopTime == 0 or loopTime < minLoopTime:
+                vs[parameterUsedId] = v
 
-            minLoopTime = loopTime
+                resetRNG(USED_SEED)
 
-    print()
-    print('best ' + parameters[parameterUsedId] + ' s :')
-    pp.pprint(bestValues)
-    print()
-    print('bestTimes :')
-    pp.pprint(bestTimes)
+                print()
+                print(parameters[parameterUsedId] + ' :', v)
+
+                runTime = runGA(vs[0], maxTime, vs[1],
+                                vs[2], vs[3])
+
+                if runTime != -1:
+                    if runTime < maxTime:
+                        maxTime = runTime
+                        bestValue = v
+                else:
+                    print('timeout')
+
+            bestValues.append(
+                '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
+            bestTimes.append(maxTime)
+
+            loopTime = time.time() - loopTimeStart
+
+            if minLoopTime == 0 or loopTime < minLoopTime:
+
+                minLoopTime = loopTime
+
+        print()
+        print('best ' + parameters[parameterUsedId] + ' s :')
+        pp.pprint(bestValues)
+        print()
+        print('bestTimes :')
+        pp.pprint(bestTimes)

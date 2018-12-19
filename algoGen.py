@@ -248,6 +248,12 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         print('save at', SAVE_PATH)
 
 
+parameters = ['POP_SIZE', 'MUTATION_RATE',
+              'CROSS_OVER_PROB', 'RATIO_SELECTED_PARENTS']
+
+parametersValues = [POP_SIZE, MUTATION_RATE,
+                    CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
+
 if __name__ == '__main__':
 
     mainTimeStart = time.time()
@@ -258,12 +264,14 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestPopSizes = []
+    bestValues = []
     bestTimes = []
 
     mainRunTime = 9*3600
 
     minLoopTime = 0
+
+    parameterUsedId = 0
 
     while time.time() - mainTimeStart < mainRunTime - minLoopTime:
 
@@ -275,6 +283,8 @@ if __name__ == '__main__':
         print('MUTATION_RATE :', MUTATION_RATE)
         print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
         print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
+        print()
+        print('changin parameter : ' + parameters[parameterUsedId])
 
         USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
 
@@ -283,34 +293,39 @@ if __name__ == '__main__':
         maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                         CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-        minPopSize = 0
+        minValue = 0
 
-        maxPopSize = 100
+        maxValue = 100
 
-        print('CROSS_OVER_PROB range :',
-              minPopSize, '-', maxPopSize)
+        print(parameters[parameterUsedId] +
+              ' range :', minValue, '-', maxValue)
 
-        bestPop = POP_SIZE
+        bestValue = parametersValues[parameterUsedId]
 
-        for popSize in range(minPopSize, maxPopSize+1):
+        for v in range(minValue, maxValue+1):
+
+            vs = [POP_SIZE, MUTATION_RATE,
+                  CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
+
+            vs[parameterUsedId] = v
 
             resetRNG(USED_SEED)
 
             print()
-            print('CROSS_OVER_PROB :', popSize)
+            print(parameters[parameterUsedId] + ' :', v)
 
-            runTime = runGA(POP_SIZE, maxTime, CROSS_OVER_PROB,
-                            popSize, RATIO_SELECTED_PARENTS)
+            runTime = runGA(vs[0], maxTime, vs[1],
+                            vs[2], vs[3])
 
             if runTime != -1:
                 if runTime < maxTime:
                     maxTime = runTime
-                    bestPop = popSize
+                    bestValue = v
             else:
                 print('timeout')
 
-        bestPopSizes.append(
-            '   ' + str(bestPop) + ', # ' + str(USED_SEED) + '   ')
+        bestValues.append(
+            '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
         bestTimes.append(maxTime)
 
         loopTime = time.time() - loopTimeStart
@@ -320,8 +335,8 @@ if __name__ == '__main__':
             minLoopTime = loopTime
 
     print()
-    print('best CROSS_OVER_PROB s :')
-    pp.pprint(bestPopSizes)
+    print('best ' + parameters[parameterUsedId] + ' s :')
+    pp.pprint(bestValues)
     print()
     print('bestTimes :')
     pp.pprint(bestTimes)

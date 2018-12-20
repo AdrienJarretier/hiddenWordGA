@@ -137,7 +137,9 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
     parentsSelectedCount = int(popSize * ratioSelectedParents/100)
 
     if len(population) == 0:
-        return generateRandomPopulation(popSize)
+        pop = generateRandomPopulation(popSize)
+        bestIndex, nbEvaluation = fullFitness(pop)
+        return pop, bestIndex, nbEvaluation
 
     selected = wheel_select(population, parentsSelectedCount)
 
@@ -156,13 +158,13 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
         dad = Individual(mutate(dad.chromosome, mutationRate))
 
         newPop += [mum, dad]
-    fullFitness(newPop)
+    bestIndex, nbEvaluation = fullFitness(newPop)
 
     bigPop = sort_population(population + newPop)
     newGeneration = bigPop[:popSize]
     random.shuffle(newGeneration)
 
-    return newGeneration
+    return newGeneration, bestIndex, nbEvaluation 
 
 
 # ------------------------------------------------------
@@ -188,12 +190,10 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
-        population = nextGeneration(
+        population, bestIndex, nbEvaluation  = nextGeneration(
             population, popSize, mutationRate, crossoverProb, ratioSelectedParents)
 
         genCount += 1
-
-        bestIndex, nbEvaluation = fullFitness(population)
 
         thisBestInd = population[bestIndex]
 

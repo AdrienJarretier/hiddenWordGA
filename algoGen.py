@@ -264,9 +264,6 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    bestValues = []
-    bestTimes = []
-
     mainRunTime = 9*3600
 
     minLoopTime = 0
@@ -280,7 +277,10 @@ if __name__ == '__main__':
 
     results = []
 
-    for parameterUsedId in range(4):
+    for parameterUsedId in range(len(parameters)):
+
+        bestValues = []
+        bestTimes = []
 
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]

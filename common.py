@@ -4,7 +4,7 @@ import random
 import os
 import sys
 
-SEED_SIZE = 18
+SEED_SIZE = 17
 
 USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 

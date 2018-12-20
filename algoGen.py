@@ -2,6 +2,8 @@ from common import *
 
 from subprocess import check_output
 
+from functools import reduce
+
 import numpy
 import pprint
 import json
@@ -30,13 +32,14 @@ class Individual:
 
 
 def fullFitness(genPopulation):
+
     genIndexSorted = []
     for i in range(len(genPopulation)):
         if genPopulation[i].fitness == 0:
             genIndexSorted.append(i)
 
     if len(genIndexSorted) == 0:
-        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation)))
+        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation))),0
 
     com = [FITNESS_PROGAM, str(GROUP_NUM)]
     for genIndex in genIndexSorted:
@@ -52,7 +55,7 @@ def fullFitness(genPopulation):
         score = float(out.split('\t')[1])
         scores.append(score)
         genPopulation[genIndexSorted[i]].fitness = score
-    return numpy.argmax(scores)
+    return numpy.argmax(scores), len(genIndexSorted)
 
 
 # ------------------------------------------------------
@@ -190,22 +193,25 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         genCount += 1
 
-        bestIndex = fullFitness(population)
+        bestIndex, nbEvaluation = fullFitness(population)
 
         thisBestInd = population[bestIndex]
 
         if thisBestInd.fitness > bestInd.fitness:
 
             bestInd = thisBestInd
-
-            phenotype = bestInd.toPhenotype()
-            obsels.append({
-                'individu': phenotype,
-                'generation': genCount,
-                'fitness': bestInd.fitness
-            })
             print('new best:', bestInd, ',', genCount, ')')
             lastGenPrint = genCount
+
+        fitnessList = [ind.fitness for ind in population]
+        obsels.append({
+            'bestPhenotype': bestInd.toPhenotype(),
+            'bestFitness': bestInd.fitness,
+            'nbEvaluation': nbEvaluation,
+            'maxFitness': max(fitnessList),
+            'minFitness': min(fitnessList),
+            'meanFitness': reduce(lambda x,y:x+y,fitnessList)/len(fitnessList)
+        })
 
         if genCount - lastGenPrint == 1000:
             print(
@@ -218,6 +224,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             print(genCount, ')')
             lastGenPrint = genCount
 
+    returnToken = -1
     if bestInd.fitness == 1:
 
         print()
@@ -228,11 +235,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         print('in time', runTime, 'seconds')
         # printSeed()
 
-        return runTime
-
-    else:
-
-        return -1
+        returnToken = runTime
 
     if SAVE_TRACE:
 
@@ -246,6 +249,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         json.dump(data, open(SAVE_PATH, 'w'))
         print('save at', SAVE_PATH)
+
+    return returnToken
 
 
 parameters = ['POP_SIZE', 'MUTATION_RATE',
@@ -269,15 +274,15 @@ if __name__ == '__main__':
     minLoopTime = 0
 
     ranges = [
-        [2, 2000],
-        [0, 100],
-        [0, 100],
-        [2, 100]
+        [POP_SIZE, POP_SIZE], # POP
+        [MUTATION_RATE, MUTATION_RATE], # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB], # CROSS
+        [RATIO_SELECTED_PARENTS, RATIO_SELECTED_PARENTS] # SELECT
     ]
 
     results = []
 
-    for parameterUsedId in range(len(parameters)):
+    for parameterUsedId in range(1): #len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -285,7 +290,7 @@ if __name__ == '__main__':
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]
 
-        while len(bestValues) < 5:
+        while len(bestValues) < 1: #5:
 
             loopTimeStart = time.time()
 
@@ -298,7 +303,7 @@ if __name__ == '__main__':
             print()
             print('changin parameter : ' + parameters[parameterUsedId])
 
-            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
+            # USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
             resetRNG(USED_SEED)
 
@@ -310,7 +315,7 @@ if __name__ == '__main__':
 
             bestValue = parametersValues[parameterUsedId]
 
-            for v in range(minValue, maxValue+1):
+            for v in range(minValue, maxValue): #+1):
 
                 vs = [POP_SIZE, MUTATION_RATE,
                       CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]

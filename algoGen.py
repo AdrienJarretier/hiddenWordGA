@@ -280,15 +280,15 @@ if __name__ == '__main__':
     minLoopTime = 0
 
     ranges = [
-        [POP_SIZE, POP_SIZE], # POP
-        [MUTATION_RATE, MUTATION_RATE], # MUT
-        [CROSS_OVER_PROB, CROSS_OVER_PROB], # CROSS
-        [RATIO_SELECTED_PARENTS, RATIO_SELECTED_PARENTS] # SELECT
+        [2, 300], # POP
+        [0, 100], # MUT
+        [0, 100], # CROSS
+        [2, 100] # SELECT
     ]
 
     results = []
 
-    for parameterUsedId in range(1): #len(parameters)):
+    for parameterUsedId in range(len(parameters)): #len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -296,7 +296,7 @@ if __name__ == '__main__':
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]
 
-        while len(bestValues) < 1: #5:
+        while len(bestValues) < 5: #5:
 
             loopTimeStart = time.time()
 
@@ -321,7 +321,7 @@ if __name__ == '__main__':
 
             bestValue = parametersValues[parameterUsedId]
 
-            for v in range(minValue, maxValue): #+1):
+            for v in range(minValue, maxValue+1): #+1):
 
                 vs = [POP_SIZE, MUTATION_RATE,
                       CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
@@ -362,12 +362,12 @@ if __name__ == '__main__':
         }
         results.append(result)
 
-        # print()
-        # print('best ' + parameters[parameterUsedId] + ' s :')
-        # pp.pprint(bestValues)
-        # print()
-        # print('bestTimes :')
-        # pp.pprint(bestTimes)
+        print()
+        print('best ' + parameters[parameterUsedId] + ' s :')
+        pp.pprint(bestValues)
+        print()
+        print('bestTimes :')
+        pp.pprint(bestTimes)
 
     print()
     pp.pprint(results)

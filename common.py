@@ -9,6 +9,7 @@ SEED_SIZE = 17
 USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
 # USED_SEED = 809335550007552268796735201475338772531677040207
+USED_SEED = 27554115246066715920827339483807944935587
 
 
 def printSeed(usedSeed):
@@ -161,4 +162,4 @@ MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
-SAVE_TRACE = False
+SAVE_TRACE = True

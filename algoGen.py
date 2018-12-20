@@ -305,7 +305,7 @@ if __name__ == '__main__':
             print()
             print('changin parameter : ' + parameters[parameterUsedId])
 
-            # USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
+            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
             resetRNG(USED_SEED)
 

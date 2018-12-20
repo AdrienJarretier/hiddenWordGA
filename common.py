@@ -4,8 +4,9 @@ import random
 import os
 import sys
 
+SEED_SIZE = 18
 
-USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
+USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
 # USED_SEED = 809335550007552268796735201475338772531677040207
 

@@ -278,6 +278,8 @@ if __name__ == '__main__':
         [2, 100]
     ]
 
+    results = []
+
     for parameterUsedId in range(4):
 
         minValue = ranges[parameterUsedId][0]
@@ -296,7 +298,7 @@ if __name__ == '__main__':
             print()
             print('changin parameter : ' + parameters[parameterUsedId])
 
-            USED_SEED = int.from_bytes(os.urandom(20), sys.byteorder)
+            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
             resetRNG(USED_SEED)
 
@@ -340,9 +342,21 @@ if __name__ == '__main__':
 
                 minLoopTime = loopTime
 
-        print()
-        print('best ' + parameters[parameterUsedId] + ' s :')
-        pp.pprint(bestValues)
-        print()
-        print('bestTimes :')
-        pp.pprint(bestTimes)
+        result = {
+
+            'parameter': parameters[parameterUsedId],
+            'bestValues': bestValues,
+            'bestTimes': bestTimes
+
+        }
+        results.append(result)
+
+        # print()
+        # print('best ' + parameters[parameterUsedId] + ' s :')
+        # pp.pprint(bestValues)
+        # print()
+        # print('bestTimes :')
+        # pp.pprint(bestTimes)
+
+    print()
+    pp.pprint(results)

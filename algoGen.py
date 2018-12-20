@@ -50,12 +50,18 @@ def fullFitness(genPopulation):
     fullOut = fullOut.decode()
     allOut = fullOut.split('\r\n')
     scores = []
+    bestScore = 0
+    bestIndex = 0
     for i in range(len(allOut) - 1):
         out = allOut[i]
         score = float(out.split('\t')[1])
         scores.append(score)
+        if score > bestScore:
+          bestScore = score
+          bestIndex = genIndexSorted[i]
         genPopulation[genIndexSorted[i]].fitness = score
-    return numpy.argmax(scores), len(genIndexSorted)
+
+    return bestIndex, len(genIndexSorted)
 
 
 # ------------------------------------------------------

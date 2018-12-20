@@ -50,18 +50,11 @@ def fullFitness(genPopulation):
     fullOut = fullOut.decode()
     allOut = fullOut.split('\r\n')
     scores = []
-    bestScore = 0
-    bestIndex = 0
     for i in range(len(allOut) - 1):
         out = allOut[i]
         score = float(out.split('\t')[1])
         scores.append(score)
-        if score > bestScore:
-          bestScore = score
-          bestIndex = genIndexSorted[i]
         genPopulation[genIndexSorted[i]].fitness = score
-
-    return bestIndex, len(genIndexSorted)
 
 
 # ------------------------------------------------------
@@ -144,8 +137,8 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
 
     if len(population) == 0:
         pop = generateRandomPopulation(popSize)
-        bestIndex, nbEvaluation = fullFitness(pop)
-        return pop, bestIndex, nbEvaluation
+        fullFitness(pop)
+        return pop
 
     selected = wheel_select(population, parentsSelectedCount)
 
@@ -164,14 +157,17 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
         dad = Individual(mutate(dad.chromosome, mutationRate))
 
         newPop += [mum, dad]
-    bestIndex, nbEvaluation = fullFitness(newPop)
+        
+    fullFitness(newPop)
 
     bigPop = sort_population(population + newPop)
     newGeneration = bigPop[:popSize]
     random.shuffle(newGeneration)
 
-    return newGeneration, bestIndex, nbEvaluation 
+    return newGeneration 
 
+def getBestIndex(pop):
+  return numpy.argmax(list(map(lambda x: x.fitness, pop)))
 
 # ------------------------------------------------------
 
@@ -196,15 +192,15 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
-        population, bestIndex, nbEvaluation  = nextGeneration(
+        population = nextGeneration(
             population, popSize, mutationRate, crossoverProb, ratioSelectedParents)
 
         genCount += 1
 
+        bestIndex = getBestIndex(population)
         thisBestInd = population[bestIndex]
 
         if thisBestInd.fitness > bestInd.fitness:
-
             bestInd = thisBestInd
             print('new best:', bestInd, ',', genCount, ')')
             lastGenPrint = genCount
@@ -213,7 +209,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         obsels.append({
             'bestPhenotype': bestInd.toPhenotype(),
             'bestFitness': bestInd.fitness,
-            'nbEvaluation': nbEvaluation,
+            'nbEvaluation': POP_SIZE,
             'maxFitness': max(fitnessList),
             'minFitness': min(fitnessList),
             'meanFitness': reduce(lambda x,y:x+y,fitnessList)/len(fitnessList)

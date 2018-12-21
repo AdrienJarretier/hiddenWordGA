@@ -279,10 +279,10 @@ if __name__ == '__main__':
     minLoopTime = 0
 
     ranges = [
-        [300, 2, -1],  # POP
+        [200, 2, -1],  # POP
         [100, 0, -1],  # MUT
         [100, 0, -1],  # CROSS
-        [2, 100, 1]  # SELECT
+        [100, 2, -1]  # SELECT
     ]
 
     results = []
@@ -321,7 +321,7 @@ if __name__ == '__main__':
             bestValue = parametersValues[parameterUsedId]
 
             # +1):
-            for v in range(minValue, maxValue+1, ranges[parameterUsedId][2]):
+            for v in range(minValue, maxValue+ranges[parameterUsedId][2], ranges[parameterUsedId][2]):
 
                 vs = [POP_SIZE, MUTATION_RATE,
                       CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
@@ -357,8 +357,8 @@ if __name__ == '__main__':
         result = {
 
             'parameter': parameters[parameterUsedId],
-            'bestValues': bestValues,
-            'bestTimes': bestTimes
+            'bestValues': bestValues
+            # ,'bestTimes': bestTimes
 
         }
         results.append(result)

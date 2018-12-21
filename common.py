@@ -44,7 +44,6 @@ FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
                            '2018-2019') + '_fitness_windows.exe'
 
 
-
 # Below are the hyper parameters of the algorithms,
 # each one is the average of the values found by the optimization process
 
@@ -60,6 +59,11 @@ popSizes = [
     74,  # 49630043593527674322465267217759000837251   ',
     46,  # 12012119498191750760927755905421357433806   ',
     100  # 59679665510247967544955524070889507976585
+]
+
+
+popSizes = [
+    80
 ]
 
 # The number of individuals in a generation
@@ -80,7 +84,12 @@ ratiosParents = [
 ]
 
 
-# the ratio of parents selected 
+ratiosParents = [
+    50
+]
+
+
+# the ratio of parents selected
 RATIO_SELECTED_PARENTS = sum(ratiosParents)/len(ratiosParents)
 
 
@@ -94,10 +103,14 @@ crossoverProbabilities = [
     8,  # 55407810372922069941855740880204737477425   ',
     19,  # 76663320510137196649273257129025785056811   ',
     55,  # 16872333953337503934653693718269183845230   ',
-    18  # 28394198696543123820836475860517386122831   '],
+    18,  # 28394198696543123820836475860517386122831   '],
+    100
 ]
 
 
+crossoverProbabilities = [
+    50
+]
 
 
 CROSS_OVER_PROB = sum(crossoverProbabilities)/len(crossoverProbabilities)
@@ -114,10 +127,12 @@ mutationRates = [
     19,  # 31147612887120858218110083009387263278326   ',
     19,  # 77333184628598948904043570869266284207031   ',
     17,  # 42288469531415021708620823139802536827873   ',
-    6  # 37625324834873432485426706442381904979278   '
+    6,  # 37625324834873432485426706442381904979278   '
+    100
 ]
-
-
+mutationRates = [
+    20
+]
 
 
 MUTATION_RATE = sum(mutationRates)/len(mutationRates)
@@ -125,4 +140,4 @@ MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
-SAVE_TRACE = True
+SAVE_TRACE = False

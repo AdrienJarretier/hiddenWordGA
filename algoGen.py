@@ -39,7 +39,7 @@ def fullFitness(genPopulation):
             genIndexSorted.append(i)
 
     if len(genIndexSorted) == 0:
-        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation))),0
+        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation))), 0
 
     com = [FITNESS_PROGAM, str(GROUP_NUM)]
     for genIndex in genIndexSorted:
@@ -157,17 +157,18 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
         dad = Individual(mutate(dad.chromosome, mutationRate))
 
         newPop += [mum, dad]
-        
+
     fullFitness(newPop)
 
     bigPop = sort_population(population + newPop)
     newGeneration = bigPop[:popSize]
     random.shuffle(newGeneration)
 
-    return newGeneration 
+    return newGeneration
+
 
 def getBestIndex(pop):
-  return numpy.argmax(list(map(lambda x: x.fitness, pop)))
+    return numpy.argmax(list(map(lambda x: x.fitness, pop)))
 
 # ------------------------------------------------------
 
@@ -177,6 +178,8 @@ def getBestIndex(pop):
 # maxTime : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
+
+
 def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     start_time = time.time()
@@ -212,7 +215,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             'nbEvaluation': POP_SIZE,
             'maxFitness': max(fitnessList),
             'minFitness': min(fitnessList),
-            'meanFitness': reduce(lambda x,y:x+y,fitnessList)/len(fitnessList)
+            'meanFitness': reduce(lambda x, y: x+y, fitnessList)/len(fitnessList)
         })
 
         if genCount - lastGenPrint == 1000:
@@ -276,15 +279,15 @@ if __name__ == '__main__':
     minLoopTime = 0
 
     ranges = [
-        [2, 300], # POP
-        [0, 100], # MUT
-        [0, 100], # CROSS
-        [2, 100] # SELECT
+        [300, 2, -1],  # POP
+        [100, 0, -1],  # MUT
+        [100, 0, -1],  # CROSS
+        [2, 100, 1]  # SELECT
     ]
 
     results = []
 
-    for parameterUsedId in range(len(parameters)): #len(parameters)):
+    for parameterUsedId in range(len(parameters)):  # len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -292,7 +295,7 @@ if __name__ == '__main__':
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]
 
-        while len(bestValues) < 5: #5:
+        while len(bestValues) < 1:  # 5:
 
             loopTimeStart = time.time()
 
@@ -309,7 +312,7 @@ if __name__ == '__main__':
 
             resetRNG(USED_SEED)
 
-            maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
+            maxTime = runGA(POP_SIZE, 10, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             print(parameters[parameterUsedId] +
@@ -317,7 +320,8 @@ if __name__ == '__main__':
 
             bestValue = parametersValues[parameterUsedId]
 
-            for v in range(minValue, maxValue+1): #+1):
+            # +1):
+            for v in range(minValue, maxValue+1, ranges[parameterUsedId][2]):
 
                 vs = [POP_SIZE, MUTATION_RATE,
                       CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
@@ -339,9 +343,10 @@ if __name__ == '__main__':
                 else:
                     print('timeout')
 
-            bestValues.append(
-                '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
-            bestTimes.append(maxTime)
+            if maxTime > -1:
+                bestValues.append(
+                    '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
+                bestTimes.append(maxTime)
 
             loopTime = time.time() - loopTimeStart
 

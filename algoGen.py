@@ -289,7 +289,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         returnToken = runTime
 
-    if SAVE_TRACE:
+    if SAVE_TRACE and returnToken != -1:
 
         data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
         TRACES_DIR = 'traces'

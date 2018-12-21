@@ -312,7 +312,7 @@ if __name__ == '__main__':
 
             resetRNG(USED_SEED)
 
-            maxTime = runGA(POP_SIZE, 10, MUTATION_RATE,
+            maxTime = runGA(POP_SIZE, 9, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             print(parameters[parameterUsedId] +

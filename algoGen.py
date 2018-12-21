@@ -340,11 +340,11 @@ if __name__ == '__main__':
 
     ranges = [
 
-        [POP_SIZE, POP_SIZE, 1],  # POP
-        [MUTATION_RATE, MUTATION_RATE, 1],  # MUT
-        [CROSS_OVER_PROB, CROSS_OVER_PROB, 1],  # CROSS
+        [POP_SIZE, POP_SIZE-1, 1],  # POP
+        [MUTATION_RATE, MUTATION_RATE-1, 1],  # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB-1, 1],  # CROSS
         [RATIO_SELECTED_PARENTS,
-         RATIO_SELECTED_PARENTS, 1]  # RATIO_SELECTED_PARENTS
+         RATIO_SELECTED_PARENTS-1, 1]  # RATIO_SELECTED_PARENTS
 
     ]
 
@@ -372,11 +372,11 @@ if __name__ == '__main__':
             print()
             # print('changin parameter : ' + parameters[parameterUsedId])
 
-            # USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
+            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
-            # resetRNG(USED_SEED)
+            resetRNG(USED_SEED)
 
-            maxTime = runGA(POP_SIZE, 8, MUTATION_RATE,
+            maxTime = runGA(POP_SIZE, 16, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             print(parameters[parameterUsedId] + ' range :', minValue, '-',

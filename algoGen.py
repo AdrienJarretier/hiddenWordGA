@@ -275,16 +275,23 @@ if __name__ == '__main__':
 
     minLoopTime = 0
 
+    # ranges = [
+    #     [2, 300], # POP
+    #     [0, 100], # MUT
+    #     [0, 100], # CROSS
+    #     [2, 100] # RATIO_SELECTED_PARENTS
+    # ]
+
     ranges = [
-        [2, 300], # POP
-        [0, 100], # MUT
-        [0, 100], # CROSS
-        [2, 100] # SELECT
+        [POP_SIZE, POP_SIZE], # POP
+        [MUTATION_RATE, MUTATION_RATE], # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB], # CROSS
+        [RATIO_SELECTED_PARENTS, RATIO_SELECTED_PARENTS] # RATIO_SELECTED_PARENTS
     ]
 
     results = []
 
-    for parameterUsedId in range(len(parameters)): #len(parameters)):
+    for parameterUsedId in range(1): #len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -292,7 +299,7 @@ if __name__ == '__main__':
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]
 
-        while len(bestValues) < 5: #5:
+        while len(bestValues) < 1: #5:
 
             loopTimeStart = time.time()
 
@@ -303,11 +310,11 @@ if __name__ == '__main__':
             print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
             print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
             print()
-            print('changin parameter : ' + parameters[parameterUsedId])
+            # print('changin parameter : ' + parameters[parameterUsedId])
 
-            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
+            # USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
-            resetRNG(USED_SEED)
+            # resetRNG(USED_SEED)
 
             maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
@@ -317,7 +324,7 @@ if __name__ == '__main__':
 
             bestValue = parametersValues[parameterUsedId]
 
-            for v in range(minValue, maxValue+1): #+1):
+            for v in range(minValue, maxValue): #+1):
 
                 vs = [POP_SIZE, MUTATION_RATE,
                       CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
@@ -358,12 +365,12 @@ if __name__ == '__main__':
         }
         results.append(result)
 
-        print()
-        print('best ' + parameters[parameterUsedId] + ' s :')
-        pp.pprint(bestValues)
-        print()
-        print('bestTimes :')
-        pp.pprint(bestTimes)
+        # print()
+        # print('best ' + parameters[parameterUsedId] + ' s :')
+        # pp.pprint(bestValues)
+        # print()
+        # print('bestTimes :')
+        # pp.pprint(bestTimes)
 
     print()
     pp.pprint(results)

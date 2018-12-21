@@ -1,7 +1,22 @@
 import matplotlib.pyplot as plt
 import json
+import sys
+import os
 
-filename = 'traces/25_(__P1K4CHU___)_1512_40514377531397772412586756095806046791652.json'
+if len(sys.argv) < 3:
+  print('You need to specify <group_num> <seed_used>')
+  exit()
+
+group_num = sys.argv[1]
+seed = sys.argv[2]
+
+tracesDir = './traces'
+
+filename = ''
+for file in os.listdir(tracesDir):
+  if group_num+'_' in file and '_'+seed+'.json' in file:
+    filename = tracesDir + '/' + file
+    break
 
 data = json.load(open(filename,'r'))
 
@@ -14,9 +29,14 @@ maxs = [obsel['maxFitness'] for obsel in obsels]
 means = [obsel['meanFitness'] for obsel in obsels]
 mins = [obsel['minFitness'] for obsel in obsels]
 
-plt.title('Groupe ' + str(group_num) + ' -- "' + password + '"')
+plt.title('Groupe ' + str(group_num) + ' "' + password + '"')
 
-plt.plot(maxs)
-plt.plot(means)
+plt.plot(maxs, label='Fitness maximum')
+plt.plot(means, label='Fitness moyenne')
+
+plt.xlabel('Générations')
+plt.ylabel('Fitness')
+
+plt.legend()
 
 plt.show()

@@ -9,7 +9,15 @@ import pprint
 import json
 import time
 
+# ------------------------------------------------------
 
+# A class representing one individual in the populatio
+#
+# An individuals has 
+# a chromosome : a list of ints representing the index of the letters in the list returned by common.getFullChoices()
+#
+# 
+#
 class Individual:
     def __init__(self, chromosome):
 
@@ -30,6 +38,7 @@ class Individual:
 
         return phenotype
 
+# ------------------------------------------------------
 
 def fullFitness(genPopulation):
 
@@ -70,22 +79,31 @@ def generateRandom():
 # ------------------------------------------------------
 
 
-def mutate(genotype, mutationRate):
+# chromosome : the chromosome to mutate : list of ints
+# mutationRate : The chance for each gene to be randomly replaced by another value : float
+#
+# returns the mutated chromosome
+def mutate(chromosome, mutationRate):
 
     chance = mutationRate / 100
 
-    newGen = []
-    for i in range(len(genotype)):
-        char = genotype[i]
+    newChrom = []
+    for i in range(len(chromosome)):
+        char = chromosome[i]
         if random.random() < chance:
             char = random.randint(0, SIZE_CHOICES - 1)
-        newGen.append(char)
-    return newGen
+        newChrom.append(char)
+    return newChrom
 
 
 # ------------------------------------------------------
 
 
+# g1, g2 : the chromosomes to mate : list of ints
+#
+#
+#
+# returns two new childs resulting of the crossover between the 2 given chromosomes
 def cross_over(g1, g2):
     child1 = []
     child2 = []
@@ -103,7 +121,10 @@ def cross_over(g1, g2):
 
 # ------------------------------------------------------
 
-
+# pop : list of Indivduals
+# count : the quantity of individuals to select by roulette wheel
+#
+# returns list of selected individuals
 def wheel_select(pop, count):
     weights = list(map(lambda x: x.fitness, pop))
     indexs = random.choices([i for i in range(len(pop))],
@@ -114,7 +135,9 @@ def wheel_select(pop, count):
 
 # ------------------------------------------------------
 
-
+# popSize : the number of individuals in the population : int
+#
+# return list of Individuals of len popSize
 def generateRandomPopulation(popSize):
     pop = []
     for i in range(popSize):
@@ -122,15 +145,25 @@ def generateRandomPopulation(popSize):
 
     return pop
 
+# ------------------------------------------------------
+
 
 def sort_population(pop):
     return sorted(pop, key=lambda x: x.fitness, reverse=True)
 
 
 # ------------------------------------------------------
-# ------------------------------------------------------
 
 
+# Generate a new generation of individuals by selecting parents, applying crossover and mutating the childs
+#
+# population : the current population : list of Individuals
+# popSize : populaiton size : int
+# mutationRate : mutation chance per : float
+# crossoverProb : max run time in seconds : float
+# ratioSelectedParents : max run time in seconds : float
+#
+# returns the new generation, a list of Individuals
 def nextGeneration(population, popSize, mutationRate, crossoverProb,
                    ratioSelectedParents):
 
@@ -167,6 +200,7 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
 
     return newGeneration
 
+# ------------------------------------------------------
 
 def getBestIndex(pop):
     return numpy.argmax(list(map(lambda x: x.fitness, pop)))
@@ -175,10 +209,13 @@ def getBestIndex(pop):
 # ------------------------------------------------------
 
 
-# run the genetic algorithm with a given populaiton size and set a max run time
+# Run the genetic algorithm with given parameters and set a max run time
 #
 # popSize : populaiton size : int
 # maxTime : max run time in seconds : float
+# mutationRate : mutation chance per : float
+# crossoverProb : max run time in seconds : float
+# ratioSelectedParents : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
 def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
@@ -265,6 +302,11 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     return returnToken
 
 
+########################################################
+# ------------------------------------------------------
+
+# This is used to optimize the hyper parameters
+
 parameters = [
     'POP_SIZE', 'MUTATION_RATE', 'CROSS_OVER_PROB', 'RATIO_SELECTED_PARENTS'
 ]
@@ -272,6 +314,9 @@ parameters = [
 parametersValues = [
     POP_SIZE, MUTATION_RATE, CROSS_OVER_PROB, RATIO_SELECTED_PARENTS
 ]
+
+# ------------------------------------------------------
+########################################################
 
 if __name__ == '__main__':
 
@@ -283,9 +328,6 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    mainRunTime = 9 * 3600
-
-    minLoopTime = 0
 
     # ranges = [
     #     [2, 300], # POP
@@ -302,6 +344,7 @@ if __name__ == '__main__':
          RATIO_SELECTED_PARENTS]  # RATIO_SELECTED_PARENTS
     ]
 
+    # store the results of the optimization loops
     results = []
 
     for parameterUsedId in range(1):  #len(parameters)):
@@ -363,12 +406,6 @@ if __name__ == '__main__':
             bestValues.append('   ' + str(bestValue) + ', # ' +
                               str(USED_SEED) + '   ')
             bestTimes.append(maxTime)
-
-            loopTime = time.time() - loopTimeStart
-
-            if minLoopTime == 0 or loopTime < minLoopTime:
-
-                minLoopTime = loopTime
 
         result = {
             'parameter': parameters[parameterUsedId],

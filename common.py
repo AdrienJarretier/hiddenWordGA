@@ -44,6 +44,11 @@ FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
                            '2018-2019') + '_fitness_windows.exe'
 
 
+
+# Below are the hyper parameters of the algorithms,
+# each one is the average of the values found by the optimization process
+
+
 popSizes = [
     44,  # 39018190143983315733414797461575953091785   ',
     100,  # 70144977305557996971719098305482476374623   ',
@@ -57,8 +62,7 @@ popSizes = [
     100  # 59679665510247967544955524070889507976585
 ]
 
-
-
+# The number of individuals in a generation
 POP_SIZE = int(sum(popSizes)/len(popSizes))
 
 
@@ -76,7 +80,7 @@ ratiosParents = [
 ]
 
 
-
+# the ratio of parents selected 
 RATIO_SELECTED_PARENTS = sum(ratiosParents)/len(ratiosParents)
 
 

@@ -9,7 +9,32 @@ SEED_SIZE = 17
 USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
 groupsSeeds = [
-    None
+    [None],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
 ]
 
 # USED_SEED = 21052245958756179004718051174220846454455

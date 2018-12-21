@@ -94,4 +94,4 @@ MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 GROUP_NUM = int(sys.argv[1])
 print('GROUP_NUM :', GROUP_NUM)
 
-SAVE_TRACE = False
+SAVE_TRACE = True

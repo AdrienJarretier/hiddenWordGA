@@ -9,6 +9,16 @@ import pprint
 import json
 import time
 
+# ------------------------------------------------------
+
+# A class representing one individual in the populatio
+#
+# An individuals has
+# a chromosome : a list of ints representing the index of the letters in the list returned by common.getFullChoices()
+#
+#
+#
+
 
 class Individual:
     def __init__(self, chromosome):
@@ -29,6 +39,8 @@ class Individual:
         phenotype = ''.join(list(map(lambda x: choices[x], self.chromosome)))
 
         return phenotype
+
+# ------------------------------------------------------
 
 
 def fullFitness(genPopulation):
@@ -70,22 +82,31 @@ def generateRandom():
 # ------------------------------------------------------
 
 
-def mutate(genotype, mutationRate):
+# chromosome : the chromosome to mutate : list of ints
+# mutationRate : The chance for each gene to be randomly replaced by another value : float
+#
+# returns the mutated chromosome
+def mutate(chromosome, mutationRate):
 
     chance = mutationRate / 100
 
-    newGen = []
-    for i in range(len(genotype)):
-        char = genotype[i]
+    newChrom = []
+    for i in range(len(chromosome)):
+        char = chromosome[i]
         if random.random() < chance:
             char = random.randint(0, SIZE_CHOICES - 1)
-        newGen.append(char)
-    return newGen
+        newChrom.append(char)
+    return newChrom
 
 
 # ------------------------------------------------------
 
 
+# g1, g2 : the chromosomes to mate : list of ints
+#
+#
+#
+# returns two new childs resulting of the crossover between the 2 given chromosomes
 def cross_over(g1, g2):
     child1 = []
     child2 = []
@@ -103,7 +124,10 @@ def cross_over(g1, g2):
 
 # ------------------------------------------------------
 
-
+# pop : list of Indivduals
+# count : the quantity of individuals to select by roulette wheel
+#
+# returns list of selected individuals
 def wheel_select(pop, count):
     weights = list(map(lambda x: x.fitness, pop))
     indexs = random.choices([i for i in range(len(pop))],
@@ -114,7 +138,9 @@ def wheel_select(pop, count):
 
 # ------------------------------------------------------
 
-
+# popSize : the number of individuals in the population : int
+#
+# return list of Individuals of len popSize
 def generateRandomPopulation(popSize):
     pop = []
     for i in range(popSize):
@@ -122,18 +148,29 @@ def generateRandomPopulation(popSize):
 
     return pop
 
+# ------------------------------------------------------
+
 
 def sort_population(pop):
     return sorted(pop, key=lambda x: x.fitness, reverse=True)
 
 
 # ------------------------------------------------------
-# ------------------------------------------------------
 
 
-def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelectedParents):
+# Generate a new generation of individuals by selecting parents, applying crossover and mutating the childs
+#
+# population : the current population : list of Individuals
+# popSize : populaiton size : int
+# mutationRate : mutation chance per : float
+# crossoverProb : max run time in seconds : float
+# ratioSelectedParents : max run time in seconds : float
+#
+# returns the new generation, a list of Individuals
+def nextGeneration(population, popSize, mutationRate, crossoverProb,
+                   ratioSelectedParents):
 
-    parentsSelectedCount = int(popSize * ratioSelectedParents/100)
+    parentsSelectedCount = int(popSize * ratioSelectedParents / 100)
 
     if len(population) == 0:
         pop = generateRandomPopulation(popSize)
@@ -148,7 +185,7 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb, ratioSelect
         mum = selected[random.randint(0, parentsSelectedCount - 1)]
         dad = selected[random.randint(0, parentsSelectedCount - 1)]
 
-        if random.random() < crossoverProb/100:
+        if random.random() < crossoverProb / 100:
             c1, c2 = cross_over(mum.chromosome, dad.chromosome)
             mum.chromosome = c1
             dad.chromosome = c2
@@ -172,10 +209,14 @@ def getBestIndex(pop):
 
 # ------------------------------------------------------
 
-# run the genetic algorithm with a given populaiton size and set a max run time
+
+# Run the genetic algorithm with given parameters and set a max run time
 #
 # popSize : populaiton size : int
 # maxTime : max run time in seconds : float
+# mutationRate : mutation chance per : float
+# crossoverProb : max run time in seconds : float
+# ratioSelectedParents : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
 
@@ -195,8 +236,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
-        population = nextGeneration(
-            population, popSize, mutationRate, crossoverProb, ratioSelectedParents)
+        population = nextGeneration(population, popSize, mutationRate,
+                                    crossoverProb, ratioSelectedParents)
 
         genCount += 1
 
@@ -210,12 +251,18 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         fitnessList = [ind.fitness for ind in population]
         obsels.append({
-            'bestPhenotype': bestInd.toPhenotype(),
-            'bestFitness': bestInd.fitness,
-            'nbEvaluation': POP_SIZE,
-            'maxFitness': max(fitnessList),
-            'minFitness': min(fitnessList),
-            'meanFitness': reduce(lambda x, y: x+y, fitnessList)/len(fitnessList)
+            'bestPhenotype':
+            bestInd.toPhenotype(),
+            'bestFitness':
+            bestInd.fitness,
+            'nbEvaluation':
+            POP_SIZE,
+            'maxFitness':
+            max(fitnessList),
+            'minFitness':
+            min(fitnessList),
+            'meanFitness':
+            reduce(lambda x, y: x + y, fitnessList) / len(fitnessList)
         })
 
         if genCount - lastGenPrint == 1000:
@@ -258,11 +305,21 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     return returnToken
 
 
-parameters = ['POP_SIZE', 'MUTATION_RATE',
-              'CROSS_OVER_PROB', 'RATIO_SELECTED_PARENTS']
+########################################################
+# ------------------------------------------------------
 
-parametersValues = [POP_SIZE, MUTATION_RATE,
-                    CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
+# This is used to optimize the hyper parameters
+
+parameters = [
+    'POP_SIZE', 'MUTATION_RATE', 'CROSS_OVER_PROB', 'RATIO_SELECTED_PARENTS'
+]
+
+parametersValues = [
+    POP_SIZE, MUTATION_RATE, CROSS_OVER_PROB, RATIO_SELECTED_PARENTS
+]
+
+# ------------------------------------------------------
+########################################################
 
 if __name__ == '__main__':
 
@@ -274,20 +331,27 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-    mainRunTime = 9*3600
-
-    minLoopTime = 0
-
     ranges = [
         [200, 2, -1],  # POP
         [100, 0, -1],  # MUT
         [100, 0, -1],  # CROSS
-        [100, 2, -1]  # SELECT
+        [100, 2, -1]  # RATIO_SELECTED_PARENTS
     ]
 
+    ranges = [
+
+        [POP_SIZE, POP_SIZE, 1],  # POP
+        [MUTATION_RATE, MUTATION_RATE, 1],  # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB, 1],  # CROSS
+        [RATIO_SELECTED_PARENTS,
+         RATIO_SELECTED_PARENTS, 1]  # RATIO_SELECTED_PARENTS
+
+    ]
+
+    # store the results of the optimization loops
     results = []
 
-    for parameterUsedId in range(len(parameters)):  # len(parameters)):
+    for parameterUsedId in range(1):  # len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -306,25 +370,27 @@ if __name__ == '__main__':
             print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
             print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
             print()
-            print('changin parameter : ' + parameters[parameterUsedId])
+            # print('changin parameter : ' + parameters[parameterUsedId])
 
-            USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
+            # USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
 
-            resetRNG(USED_SEED)
+            # resetRNG(USED_SEED)
 
             maxTime = runGA(POP_SIZE, 8, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-            print(parameters[parameterUsedId] +
-                  ' range :', minValue, '-', maxValue)
+            print(parameters[parameterUsedId] + ' range :', minValue, '-',
+                  maxValue)
 
             bestValue = parametersValues[parameterUsedId]
 
             # +1):
             for v in range(minValue, maxValue+ranges[parameterUsedId][2], ranges[parameterUsedId][2]):
 
-                vs = [POP_SIZE, MUTATION_RATE,
-                      CROSS_OVER_PROB, RATIO_SELECTED_PARENTS]
+                vs = [
+                    POP_SIZE, MUTATION_RATE, CROSS_OVER_PROB,
+                    RATIO_SELECTED_PARENTS
+                ]
 
                 vs[parameterUsedId] = v
 
@@ -333,8 +399,7 @@ if __name__ == '__main__':
                 print()
                 print(parameters[parameterUsedId] + ' :', v)
 
-                runTime = runGA(vs[0], maxTime, vs[1],
-                                vs[2], vs[3])
+                runTime = runGA(vs[0], maxTime, vs[1], vs[2], vs[3])
 
                 if runTime != -1:
                     if runTime < maxTime:
@@ -348,14 +413,7 @@ if __name__ == '__main__':
                     '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
                 bestTimes.append(maxTime)
 
-            loopTime = time.time() - loopTimeStart
-
-            if minLoopTime == 0 or loopTime < minLoopTime:
-
-                minLoopTime = loopTime
-
         result = {
-
             'parameter': parameters[parameterUsedId],
             'bestValues': bestValues
             # ,'bestTimes': bestTimes
@@ -363,12 +421,12 @@ if __name__ == '__main__':
         }
         results.append(result)
 
-        print()
-        print('best ' + parameters[parameterUsedId] + ' s :')
-        pp.pprint(bestValues)
-        print()
-        print('bestTimes :')
-        pp.pprint(bestTimes)
+        # print()
+        # print('best ' + parameters[parameterUsedId] + ' s :')
+        # pp.pprint(bestValues)
+        # print()
+        # print('bestTimes :')
+        # pp.pprint(bestTimes)
 
     print()
     pp.pprint(results)

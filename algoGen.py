@@ -13,11 +13,13 @@ import time
 
 # A class representing one individual in the populatio
 #
-# An individuals has 
+# An individuals has
 # a chromosome : a list of ints representing the index of the letters in the list returned by common.getFullChoices()
 #
-# 
 #
+#
+
+
 class Individual:
     def __init__(self, chromosome):
 
@@ -39,6 +41,7 @@ class Individual:
         return phenotype
 
 # ------------------------------------------------------
+
 
 def fullFitness(genPopulation):
 
@@ -200,11 +203,9 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
 
     return newGeneration
 
-# ------------------------------------------------------
 
 def getBestIndex(pop):
     return numpy.argmax(list(map(lambda x: x.fitness, pop)))
-
 
 # ------------------------------------------------------
 
@@ -218,6 +219,8 @@ def getBestIndex(pop):
 # ratioSelectedParents : max run time in seconds : float
 #
 # return runtime or -1 if the function times out
+
+
 def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     start_time = time.time()
@@ -286,7 +289,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         returnToken = runTime
 
-    if SAVE_TRACE:
+    if SAVE_TRACE and returnToken != -1:
 
         data = {'obsels': obsels, 'group_num': GROUP_NUM, 'seed': USED_SEED}
         TRACES_DIR = 'traces'
@@ -328,26 +331,27 @@ if __name__ == '__main__':
     print(' --- Finding hidden word with a genetic algorithm --- ')
     print()
 
-
     # ranges = [
-    #     [2, 300], # POP
-    #     [0, 100], # MUT
-    #     [0, 100], # CROSS
-    #     [2, 100] # RATIO_SELECTED_PARENTS
+    #     [200, 2, -1],  # POP
+    #     [100, 0, -1],  # MUT
+    #     [100, 0, -1],  # CROSS
+    #     [100, 2, -1]  # RATIO_SELECTED_PARENTS
     # ]
 
     ranges = [
-        [POP_SIZE, POP_SIZE],  # POP
-        [MUTATION_RATE, MUTATION_RATE],  # MUT
-        [CROSS_OVER_PROB, CROSS_OVER_PROB],  # CROSS
+
+        [POP_SIZE, POP_SIZE-1, 1],  # POP
+        [MUTATION_RATE, MUTATION_RATE-1, 1],  # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB-1, 1],  # CROSS
         [RATIO_SELECTED_PARENTS,
-         RATIO_SELECTED_PARENTS]  # RATIO_SELECTED_PARENTS
+         RATIO_SELECTED_PARENTS-1, 1]  # RATIO_SELECTED_PARENTS
+
     ]
 
     # store the results of the optimization loops
     results = []
 
-    for parameterUsedId in range(1):  #len(parameters)):
+    for parameterUsedId in range(1):  # len(parameters)):
 
         bestValues = []
         bestTimes = []
@@ -355,7 +359,7 @@ if __name__ == '__main__':
         minValue = ranges[parameterUsedId][0]
         maxValue = ranges[parameterUsedId][1]
 
-        while len(bestValues) < 1:  #5:
+        while len(bestValues) < 1:  # 5:
 
             loopTimeStart = time.time()
 
@@ -372,15 +376,16 @@ if __name__ == '__main__':
 
             # resetRNG(USED_SEED)
 
-            maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE, CROSS_OVER_PROB,
-                            RATIO_SELECTED_PARENTS)
+            maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
+                            CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             print(parameters[parameterUsedId] + ' range :', minValue, '-',
                   maxValue)
 
             bestValue = parametersValues[parameterUsedId]
 
-            for v in range(minValue, maxValue):  #+1):
+            # +1):
+            for v in range(minValue, maxValue+ranges[parameterUsedId][2], ranges[parameterUsedId][2]):
 
                 vs = [
                     POP_SIZE, MUTATION_RATE, CROSS_OVER_PROB,
@@ -403,14 +408,16 @@ if __name__ == '__main__':
                 else:
                     print('timeout')
 
-            bestValues.append('   ' + str(bestValue) + ', # ' +
-                              str(USED_SEED) + '   ')
-            bestTimes.append(maxTime)
+            if maxTime > -1:
+                bestValues.append(
+                    '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
+                bestTimes.append(maxTime)
 
         result = {
             'parameter': parameters[parameterUsedId],
-            'bestValues': bestValues,
-            'bestTimes': bestTimes
+            'bestValues': bestValues
+            # ,'bestTimes': bestTimes
+
         }
         results.append(result)
 

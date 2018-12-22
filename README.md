@@ -19,6 +19,7 @@ Projet pédagogique - UE Intelligence Bio Inspirée - Module Algorithme Généti
   * Le lancement de l'algoGen vas générer une trace d'exécution enregistrée dans le répertoire ./traces et portant le nom `<num_groupe>_<password>_<nb_generations>_<seed>.json`
     Pour lancer la visualisation d'une trace: python `> viewer.py <num_groupe> <seed>`
     (Attention nécessite matplotlib)
+    Pour toutes les graînes présentées ci-dessous il existe déjà une trace visualisable avec le viewer.
 
 ## Seed "intéressantes"
 

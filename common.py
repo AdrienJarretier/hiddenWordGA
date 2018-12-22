@@ -37,7 +37,7 @@ groupsSeeds = {
     25:   [79961701940385312990642022376200348006790]
 }
 
-USED_SEED = groupsSeeds[7][0]
+# USED_SEED = groupsSeeds[7][0]
 
 
 def printSeed(usedSeed):

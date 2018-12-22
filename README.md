@@ -22,7 +22,7 @@ Projet pédagogique - UE Intelligence Bio Inspirée - Module Algorithme Généti
 
 ## Seed "intéressantes"
 
-  La graîne est à mettre dans `common.py` ligne 11 en décommentant `USED_SEED` et en remplacant la valeur par la graîne voulue
+  La graîne est à mettre dans `common.py` ligne 40 en décommentant `USED_SEED` et en remplacant la valeur par la graîne voulue
 
  - 2965988349138115145838932619275020242716 (exemple du rapport, 1398 générations)
 

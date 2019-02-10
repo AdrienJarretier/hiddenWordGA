@@ -40,41 +40,72 @@ class Individual:
 
         return phenotype
 
+
+# ------------------------------------------------------
+
+def fitness(individual):
+
+    indivPhenotype = individual.toPhenotype()
+
+    # print('dfsddfsfsdfsd')
+    # print(indivPhenotype)
+
+    distance = abs(len(hiddenWord) - len(indivPhenotype))
+
+    for i in range(min(len(hiddenWord), len(indivPhenotype))):
+
+        if hiddenWord[i] != indivPhenotype[i]:
+
+            distance += 1
+
+    return 1/(distance+1)
+
+
+def fullFitness(population):
+
+    for indiv in population:
+
+        indiv.fitness = fitness(indiv)
+
 # ------------------------------------------------------
 
 
-def fullFitness(genPopulation):
-
-    genIndexSorted = []
-    for i in range(len(genPopulation)):
-        if genPopulation[i].fitness == 0:
-            genIndexSorted.append(i)
-
-    if len(genIndexSorted) == 0:
-        return numpy.argmax(list(map(lambda x: x.fitness, genPopulation))), 0
-
-    com = [FITNESS_PROGAM, str(GROUP_NUM)]
-    for genIndex in genIndexSorted:
-        phen = genPopulation[genIndex].toPhenotype()
-        com.append(phen)
-
-    fullOut = check_output(com)
-    fullOut = fullOut.decode()
-    allOut = fullOut.split('\r\n')
-    scores = []
-    for i in range(len(allOut) - 1):
-        out = allOut[i]
-        score = float(out.split('\t')[1])
-        scores.append(score)
-        genPopulation[genIndexSorted[i]].fitness = score
+# # ------------------------------------------------------
 
 
-# ------------------------------------------------------
+# def fullFitness(genPopulation):
+
+#     genIndexSorted = []
+#     for i in range(len(genPopulation)):
+#         if genPopulation[i].fitness == 0:
+#             genIndexSorted.append(i)
+
+#     if len(genIndexSorted) == 0:
+#         return numpy.argmax(list(map(lambda x: x.fitness, genPopulation))), 0
+
+#     com = [FITNESS_PROGAM, str(GROUP_NUM)]
+#     for genIndex in genIndexSorted:
+#         phen = genPopulation[genIndex].toPhenotype()
+#         com.append(phen)
+
+#     fullOut = check_output(com)
+#     fullOut = fullOut.decode()
+#     allOut = fullOut.split('\r\n')
+
+#     scores = []
+#     for i in range(len(allOut) - 1):
+#         out = allOut[i]
+#         score = float(out.split('\t')[1])
+#         scores.append(score)
+#         genPopulation[genIndexSorted[i]].fitness = score
+
+
+# # ------------------------------------------------------
 
 
 def generateRandom():
     genotype = []
-    for _ in range(GENOTYPE_LENGTH):
+    for _ in range(random.randint(1, 25)):
         genotype.append(random.randint(0, SIZE_CHOICES - 1))
     return genotype
 
@@ -86,11 +117,39 @@ def generateRandom():
 # mutationRate : The chance for each gene to be randomly replaced by another value : float
 #
 # returns the mutated chromosome
+# def mutate(chromosome, mutationRate):
+
+#     chance = mutationRate / 100
+
+#     newChrom = []
+#     for i in range(len(chromosome)):
+#         char = chromosome[i]
+#         if random.random() < chance:
+#             char = random.randint(0, SIZE_CHOICES - 1)
+#         newChrom.append(char)
+#     return newChrom
+
+
+
 def mutate(chromosome, mutationRate):
+
+    MUTATION_DELETION = 0
+    MUTATION_ADDITION = 1
+    MUTATION_SUBSTITUTION = 2
+    mutationType = 0
+
+    if len(chromosome)==1:
+        mutationType = random.randint(1,2)
+    else:
+        mutationType = random.randint(0,2)
 
     chance = mutationRate / 100
 
     newChrom = []
+
+    if mutationType == MUTATION_DELETION:
+
+
     for i in range(len(chromosome)):
         char = chromosome[i]
         if random.random() < chance:
@@ -102,23 +161,32 @@ def mutate(chromosome, mutationRate):
 # ------------------------------------------------------
 
 
-# g1, g2 : the chromosomes to mate : list of ints
+# chrom1, chrom2 : the chromosomes to mate : list of ints
 #
 #
 #
 # returns two new childs resulting of the crossover between the 2 given chromosomes
-def cross_over(g1, g2):
+def cross_over(chrom1, chrom2):
+
+    # print('g1 :',g1)
+    # print('g2 :',g2)
+    # print()
+
     child1 = []
     child2 = []
-    cutter = random.randint(0, len(g1) - 1)
-    for i in range(0, len(g1)):
-        c1 = g1[i]
-        c2 = g2[i]
-        if i > cutter:
-            c1 = g2[i]
-            c2 = g1[i]
-        child1.append(c1)
-        child2.append(c2)
+    cutter = random.randint(0, min(len(chrom1), len(chrom2)) - 1)
+
+    def appendToChilds(gene1, gene2):
+
+        child1.append(gene1)
+        child2.append(gene2)
+
+    for i in range(0, cutter):
+        appendToChilds(chrom1[i], chrom2[i])
+
+    for i in range(cutter, min(len(chrom1), len(chrom2))):
+        appendToChilds(chrom2[i], chrom1[i])
+
     return child1, child2
 
 
@@ -187,6 +255,7 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
 
         if random.random() < crossoverProb / 100:
             c1, c2 = cross_over(mum.chromosome, dad.chromosome)
+
             mum.chromosome = c1
             dad.chromosome = c2
 
@@ -194,6 +263,8 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
         dad = Individual(mutate(dad.chromosome, mutationRate))
 
         newPop += [mum, dad]
+
+    # time.sleep(1)
 
     fullFitness(newPop)
 

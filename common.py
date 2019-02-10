@@ -60,17 +60,17 @@ resetRNG(USED_SEED)
 
 def getFullChoices():
 
-    AVAILABLE_CHARS = string.ascii_uppercase + string.digits + '___'
+    AVAILABLE_CHARS = string.ascii_uppercase + string.digits + '_' + string.ascii_lowercase
     return AVAILABLE_CHARS
 
 
 SIZE_CHOICES = len(getFullChoices())
 
-WORD_LEN = 12
-GENOTYPE_LENGTH = WORD_LEN
+# WORD_LEN = 12
+# GENOTYPE_LENGTH = WORD_LEN
 
-FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
-                           '2018-2019') + '_fitness_windows.exe'
+# FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
+#                            '2018-2019') + '_fitness_windows.exe'
 
 
 # Below are the hyper parameters of the algorithms,
@@ -120,7 +120,12 @@ mutationRates = [
 
 MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 
-GROUP_NUM = int(sys.argv[1])
-print('GROUP_NUM :', GROUP_NUM)
+# GROUP_NUM = int(sys.argv[1])
+# print('GROUP_NUM :', GROUP_NUM)
 
-SAVE_TRACE = True
+SAVE_TRACE = False
+
+# hiddenWord = input('word to find : ')
+
+hiddenWord = 'hellohello'
+

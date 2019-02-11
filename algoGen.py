@@ -138,23 +138,41 @@ def mutate(chromosome, mutationRate):
     MUTATION_SUBSTITUTION = 2
     mutationType = 0
 
-    if len(chromosome)==1:
-        mutationType = random.randint(1,2)
-    else:
-        mutationType = random.randint(0,2)
-
     chance = mutationRate / 100
 
-    newChrom = []
-
-    if mutationType == MUTATION_DELETION:
-
+    newChrom = chromosome[:]
 
     for i in range(len(chromosome)):
-        char = chromosome[i]
+
         if random.random() < chance:
-            char = random.randint(0, SIZE_CHOICES - 1)
-        newChrom.append(char)
+
+            if len(newChrom)==1:
+                mutationType = random.randint(1,2)
+            else:
+                mutationType = random.randint(0,2)
+
+            if mutationType == MUTATION_DELETION:
+
+                deletePosition = random.randint(0,len(newChrom)-1)
+                del newChrom[deletePosition]
+
+            elif mutationType == MUTATION_ADDITION:
+
+                insertPosition = random.randint(0,len(newChrom))
+                newChrom.insert(insertPosition, random.randint(0, SIZE_CHOICES - 1))
+
+            elif mutationType == MUTATION_SUBSTITUTION:
+
+                substPosition = random.randint(0,len(newChrom)-1)
+                newChrom[substPosition] = random.randint(0, SIZE_CHOICES - 1)
+
+
+    # for i in range(len(chromosome)):
+    #     char = chromosome[i]
+    #     if random.random() < chance:
+    #         char = random.randint(0, SIZE_CHOICES - 1)
+    #     newChrom.append(char)
+
     return newChrom
 
 

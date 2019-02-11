@@ -39,6 +39,7 @@ groupsSeeds = {
 
 # USED_SEED = groupsSeeds[7][0]
 
+USED_SEED = 80265029185544089964019971750035328979606
 
 def printSeed(usedSeed):
 

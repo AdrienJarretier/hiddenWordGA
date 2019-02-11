@@ -1,12 +1,20 @@
-# AlgoGenetique 
-### Hugo Castaneda - Adrien Jarretier-Yuste
+# Un algorithme génétique pour trouver un mot caché 
 
 Projet pédagogique - UE Intelligence Bio Inspirée - Module Algorithme Génétique
+
+Des modifications ont été apportées pour ajouter de l'intéractivité (en proposant à un utilisateur de rentrer le mot à trouver) dans le cadre d'une médiation sur le thème de l'IA à la médiathèque de Bron
 
 ## Langage
   * Python 3.7
 
 ## Exécution
+
+`python .`
+
+La graîne est fixée dans *common.py* pour régler un cas de bug,
+Le mot caché est **hellohello**, il est inscrit dans *common.py*
+
+## Exécution ancienne version
 
   * Copier `ibi_2018-2019_fitness_windows.exe` dans la racine du répertoire (cad à côté de algoGen.py)
 
@@ -56,3 +64,8 @@ Projet pédagogique - UE Intelligence Bio Inspirée - Module Algorithme Généti
  - 23_(4_8_0__A_B_O)_2605_  5240974929559795187140653709984178453196
  - 24_(4R80K__ARBOK)_2162_  49864554335335321192408198597214825176435
  - 25_(__P1K4CHU___)_1592_  79961701940385312990642022376200348006790
+ 
+ # Authors
+ 
+- ### Hugo Castaneda
+- ### Adrien Jarretier-Yuste

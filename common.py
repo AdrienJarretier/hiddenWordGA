@@ -4,6 +4,11 @@ import random
 import os
 import sys
 
+FIXED_SEED = 80265029185544089964019971750035328979606
+
+FIXED_HIDDEN_WORD = 'hellohello'
+
+
 SEED_SIZE = 17
 
 USED_SEED = int.from_bytes(os.urandom(SEED_SIZE), sys.byteorder)
@@ -39,7 +44,13 @@ groupsSeeds = {
 
 # USED_SEED = groupsSeeds[7][0]
 
-USED_SEED = 80265029185544089964019971750035328979606
+
+try:
+    FIXED_SEED
+except NameError:
+    FIXED_SEED = USED_SEED
+
+USED_SEED = FIXED_SEED
 
 def printSeed(usedSeed):
 
@@ -126,7 +137,11 @@ MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 
 SAVE_TRACE = False
 
-# hiddenWord = input('word to find : ')
 
-hiddenWord = 'hellohello'
+try:
+    FIXED_HIDDEN_WORD
+except NameError:
+    FIXED_HIDDEN_WORD = input('word to find : ')
+
+hiddenWord = FIXED_HIDDEN_WORD
 

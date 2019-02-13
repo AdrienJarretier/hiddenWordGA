@@ -19,12 +19,26 @@ import time
 #
 #
 
+def printGenealogy(individual):
+
+    if individual.mum is not None:
+        printGenealogy(individual.mum)
+        print('mum :', end='')
+
+    if individual.dad is not None:
+        printGenealogy(individual.dad)
+        print('dad :', end='')
+
+    print(individual)
 
 class Individual:
 
     nextId = 0
 
-    def __init__(self, chromosome):
+    def __init__(self, chromosome, mum=None, dad=None):
+
+        self.mum = mum
+        self.dad = dad
 
         self.id = Individual.nextId
         Individual.nextId += 1
@@ -256,8 +270,12 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
     newPop = []
 
     while len(newPop) < popSize:
-        mumChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
-        dadChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
+
+        mum = selected[random.randint(0, parentsSelectedCount - 1)]
+        dad = selected[random.randint(0, parentsSelectedCount - 1)]
+
+        mumChrom = mum.chromosome[:]
+        dadChrom = dad.chromosome[:]
 
         if random.random() < crossoverProb / 100:
             c1, c2 = cross_over(mumChrom, dadChrom)
@@ -265,10 +283,10 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
             mumChrom = c1
             dadChrom = c2
 
-        mum = Individual(mutate(mumChrom, mutationRate))
-        dad = Individual(mutate(dadChrom, mutationRate))
+        child1 = Individual(mutate(mumChrom, mutationRate), mum, dad)
+        child2 = Individual(mutate(dadChrom, mutationRate), mum, dad)
 
-        newPop += [mum, dad]
+        newPop += [child1, child2]
 
     # time.sleep(1)
 
@@ -379,6 +397,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         # printSeed()
 
         returnToken = runTime
+
+        printGenealogy(bestInd)
 
     else :
 

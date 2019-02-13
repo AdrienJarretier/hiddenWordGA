@@ -111,7 +111,7 @@ def fullFitness(population):
 
 def generateRandom():
     genotype = []
-    for _ in range(random.randint(1, 25)):
+    for _ in range(random.randint(1, 77)):
         genotype.append(random.randint(0, SIZE_CHOICES - 1))
     return genotype
 
@@ -376,12 +376,16 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     returnToken = -1
     if bestInd.fitness == 1:
 
+        foundWord = bestInd.toPhenotype()
+
         print()
-        print('found', bestInd)
+        print(' '*9,'-'*(len(foundWord)+4))
+        print(' Trouvé : |', foundWord, '|')
+        print(' '*9,'-'*(len(foundWord)+4))
 
         runTime = time.time() - start_time
 
-        print('in time', runTime, 'seconds')
+        print('\nen', runTime, 'seconds\n')
         # printSeed()
 
         returnToken = runTime
@@ -425,7 +429,7 @@ if __name__ == '__main__':
     pp = pprint.PrettyPrinter(indent=2)
 
     print()
-    print(' --- Finding hidden word with a genetic algorithm --- ')
+    print(' --- Recherche du mot caché avec un algorithme génétique --- ')
     print()
 
     # ranges = [
@@ -462,10 +466,10 @@ if __name__ == '__main__':
 
             print()
             print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::')
-            print('POP_SIZE :', POP_SIZE)
-            print('MUTATION_RATE :', MUTATION_RATE)
-            print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
-            print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
+            # print('POP_SIZE :', POP_SIZE)
+            # print('MUTATION_RATE :', MUTATION_RATE)
+            # print('CROSS_OVER_PROB :', CROSS_OVER_PROB)
+            # print('RATIO_SELECTED_PARENTS :', RATIO_SELECTED_PARENTS)
             print()
             # print('changin parameter : ' + parameters[parameterUsedId])
 
@@ -476,8 +480,8 @@ if __name__ == '__main__':
             maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
-            print(parameters[parameterUsedId] + ' range :', minValue, '-',
-                  maxValue)
+            # print(parameters[parameterUsedId] + ' range :', minValue, '-',
+            #       maxValue)
 
             bestValue = parametersValues[parameterUsedId]
 
@@ -525,5 +529,5 @@ if __name__ == '__main__':
         # print('bestTimes :')
         # pp.pprint(bestTimes)
 
-    print()
-    pp.pprint(results)
+    # print()
+    # pp.pprint(results)

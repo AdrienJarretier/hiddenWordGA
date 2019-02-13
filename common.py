@@ -4,7 +4,7 @@ import random
 import os
 import sys
 
-# FIXED_SEED = 80265029185544089964019971750035328979606
+# FIXED_SEED = 83679253667282854847615544598215025854178
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -63,7 +63,7 @@ def printSeed(usedSeed):
 
 def resetRNG(usedSeed):
 
-    # printSeed(usedSeed)
+    printSeed(usedSeed)
     random.seed(usedSeed)
 
 

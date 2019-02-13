@@ -6,8 +6,8 @@ import sys
 
 FIXED_SEED = 80265029185544089964019971750035328979606
 
+FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 FIXED_HIDDEN_WORD = 'hellohello'
-
 
 SEED_SIZE = 17
 
@@ -72,7 +72,10 @@ resetRNG(USED_SEED)
 
 def getFullChoices():
 
-    AVAILABLE_CHARS = string.ascii_uppercase + string.digits + '_' + string.ascii_lowercase
+    ACCENTS = 'àâé-èîêûôçïëüäöù'
+    AVAILABLE_CHARS = string.ascii_uppercase + string.digits \
+        + '_' + string.ascii_lowercase + ACCENTS + ' ' \
+        + string.punctuation
     return AVAILABLE_CHARS
 
 

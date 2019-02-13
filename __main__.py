@@ -273,17 +273,17 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
     newPop = []
 
     while len(newPop) < popSize:
-        mum = selected[random.randint(0, parentsSelectedCount - 1)]
-        dad = selected[random.randint(0, parentsSelectedCount - 1)]
+        mumChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
+        dadChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
 
         if random.random() < crossoverProb / 100:
-            c1, c2 = cross_over(mum.chromosome, dad.chromosome)
+            c1, c2 = cross_over(mumChrom, dadChrom)
 
-            mum.chromosome = c1
-            dad.chromosome = c2
+            mumChrom = c1
+            dadChrom = c2
 
-        mum = Individual(mutate(mum.chromosome, mutationRate))
-        dad = Individual(mutate(dad.chromosome, mutationRate))
+        mum = Individual(mutate(mumChrom, mutationRate))
+        dad = Individual(mutate(dadChrom, mutationRate))
 
         newPop += [mum, dad]
 

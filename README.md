@@ -11,8 +11,11 @@ Des modifications ont été apportées pour ajouter de l'intéractivité (en pro
 
 `python .`
 
-La graîne est fixée dans *common.py* pour régler un cas de bug,
-Le mot caché est **hellohello**, il est inscrit dans *common.py*
+L'interface demande d'entrer un mot à cacher, l'algorithme génétique ne le connait pas et essaye de le trouver.
+
+La fonctione d'aptitude est simplement la [distance de Levenshtein](https://fr.wikipedia.org/wiki/Distance_de_Levenshtein) entre l'individu et la chaîne cachée
+
+une mutation d'un individu peut supprimer, ajouter ou remplacer un caractère par un caractère aléatoire
 
 ## Exécution ancienne version
 

@@ -6,9 +6,11 @@ import geneticAlgorithm
 # FIXED_HIDDEN_WORD = 'hellohello'
 
 if __name__ == "__main__":
-    
+
     try:
         FIXED_HIDDEN_WORD
+
+        hideWord.hide(FIXED_HIDDEN_WORD)
 
         geneticAlgorithm.main()
         

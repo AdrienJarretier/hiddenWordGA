@@ -1,6 +1,9 @@
 import hideWord
 import geneticAlgorithm
 
+import math
+
+import readline
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -12,7 +15,7 @@ if __name__ == "__main__":
 
         hideWord.hide(FIXED_HIDDEN_WORD)
 
-        geneticAlgorithm.main()
+        geneticAlgorithm.main(math.inf)
         
     except NameError:
 
@@ -25,4 +28,4 @@ if __name__ == "__main__":
 
             hideWord.hide(FIXED_HIDDEN_WORD)
 
-            geneticAlgorithm.main()
+            geneticAlgorithm.main(60)

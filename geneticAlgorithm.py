@@ -323,7 +323,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         if thisBestInd.fitness > bestInd.fitness:
             bestInd = thisBestInd
-            print('new best:', bestInd, ',', genCount, ')')
+            # print('new best:', bestInd, ',', genCount, ')')
+            print('Nouveau meilleur :', bestInd.toPhenotype(), '\n')
             
             # if bestInd.fitness >= 0.5 :
                 # mutationRate = 0
@@ -347,16 +348,17 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             reduce(lambda x, y: x + y, fitnessList) / len(fitnessList)
         })
 
-        if genCount - lastGenPrint == 1000:
-            print(
-                'the best:',
-                thisBestInd,
-                end='')
-            print(', generation #', end='')
-            print(genCount, ')')
-            lastGenPrint = genCount
+        # if genCount - lastGenPrint == 1000:
+        #     print(
+        #         'the best:',
+        #         thisBestInd,
+        #         end='')
+        #     print(', generation #', end='')
+        #     print(genCount, ')')
+        #     lastGenPrint = genCount
 
     returnToken = -1
+
     if bestInd.fitness == 1:
 
         foundWord = bestInd.toPhenotype()
@@ -372,6 +374,29 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         # printSeed()
 
         returnToken = runTime
+
+    else :
+
+        foundWord = bestInd.toPhenotype()
+
+
+        print("\n\n L'algorithme n'a pas trouvé la solution exacte")
+        print(" en moins de", maxTime, "secondes.\n")
+
+        label = "Plus proche trouvé"
+
+        print(' '*(3+len(label)),'-'*(len(foundWord)+4))
+        print('',label,': |', foundWord, '|')
+        print(' '*(3+len(label)),'-'*(len(foundWord)+4))
+
+        runTime = time.time() - start_time
+
+        print('\nen', runTime, 'seconds\n')
+        # printSeed()
+
+        returnToken = runTime
+
+
 
     if SAVE_TRACE and returnToken != -1:
 
@@ -408,7 +433,7 @@ parametersValues = [
 def reset():
     Individual.nextId = 0
 
-def main():
+def main(maxRunTime):
 
     reset()
 
@@ -465,7 +490,7 @@ def main():
 
             # resetRNG(USED_SEED)
 
-            maxTime = runGA(POP_SIZE, math.inf, MUTATION_RATE,
+            maxTime = runGA(POP_SIZE, maxRunTime, MUTATION_RATE,
                             CROSS_OVER_PROB, RATIO_SELECTED_PARENTS)
 
             # print(parameters[parameterUsedId] + ' range :', minValue, '-',

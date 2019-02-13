@@ -4,10 +4,10 @@ import random
 import os
 import sys
 
-FIXED_SEED = 80265029185544089964019971750035328979606
+# FIXED_SEED = 80265029185544089964019971750035328979606
 
-FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
-FIXED_HIDDEN_WORD = 'hellohello'
+# FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
+# FIXED_HIDDEN_WORD = 'hellohello'
 
 SEED_SIZE = 17
 
@@ -63,7 +63,7 @@ def printSeed(usedSeed):
 
 def resetRNG(usedSeed):
 
-    printSeed(usedSeed)
+    # printSeed(usedSeed)
     random.seed(usedSeed)
 
 
@@ -144,7 +144,10 @@ SAVE_TRACE = False
 try:
     FIXED_HIDDEN_WORD
 except NameError:
-    FIXED_HIDDEN_WORD = input('word to find : ')
+    print()
+    FIXED_HIDDEN_WORD = ''
+    while len(FIXED_HIDDEN_WORD)<1:
+        FIXED_HIDDEN_WORD = input('Mot à cacher : ')
 
 hiddenWord = FIXED_HIDDEN_WORD
 

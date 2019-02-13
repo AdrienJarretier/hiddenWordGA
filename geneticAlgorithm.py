@@ -324,7 +324,10 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         if thisBestInd.fitness > bestInd.fitness:
             bestInd = thisBestInd
             # print('new best:', bestInd, ',', genCount, ')')
-            print('Nouveau meilleur :', bestInd.toPhenotype(), '\n')
+
+            textLine = 'Meilleur : ' + bestInd.toPhenotype()
+
+            print(' ' + textLine, '\n')
             
             # if bestInd.fitness >= 0.5 :
                 # mutationRate = 0
@@ -348,7 +351,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             reduce(lambda x, y: x + y, fitnessList) / len(fitnessList)
         })
 
-        print("Génération #", genCount, end = '\r')
+        print(" Génération #", genCount, end = '\r')
 
         # if genCount - lastGenPrint == 1000:
         #     print(

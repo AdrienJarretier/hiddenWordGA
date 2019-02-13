@@ -2,8 +2,9 @@ import hideWord
 import geneticAlgorithm
 
 import math
-
 import readline
+
+MAX_RUN_TIME = 60
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -28,4 +29,4 @@ if __name__ == "__main__":
 
             hideWord.hide(FIXED_HIDDEN_WORD)
 
-            geneticAlgorithm.main(60)
+            geneticAlgorithm.main(MAX_RUN_TIME)

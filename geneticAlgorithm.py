@@ -405,7 +405,12 @@ parametersValues = [
 # ------------------------------------------------------
 ########################################################
 
+def reset():
+    Individual.nextId = 0
+
 def main():
+
+    reset()
 
     mainTimeStart = time.time()
 

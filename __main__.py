@@ -9,12 +9,18 @@ if __name__ == "__main__":
     
     try:
         FIXED_HIDDEN_WORD
+
+        geneticAlgorithm.main()
+        
     except NameError:
-        print()
-        FIXED_HIDDEN_WORD = ''
-        while len(FIXED_HIDDEN_WORD)<1:
-            FIXED_HIDDEN_WORD = input('Mot à cacher : ')
 
-        hideWord.hide(FIXED_HIDDEN_WORD)
+        while True :
 
-    geneticAlgorithm.main()
+            print()
+            FIXED_HIDDEN_WORD = ''
+            while len(FIXED_HIDDEN_WORD)<1:
+                FIXED_HIDDEN_WORD = input('Mot à cacher : ')
+
+            hideWord.hide(FIXED_HIDDEN_WORD)
+
+            geneticAlgorithm.main()

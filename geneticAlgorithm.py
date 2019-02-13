@@ -19,15 +19,15 @@ import time
 #
 #
 
-def printGenealogy(individual):
+def printGenealogy(individual, distance=0):
 
     if individual.mum is not None:
-        printGenealogy(individual.mum)
-        print('mum :', end='')
+        printGenealogy(individual.mum, distance+1)
+        print(' '*distance, 'mum',distance,': ', end='')
 
     if individual.dad is not None:
-        printGenealogy(individual.dad)
-        print('dad :', end='')
+        printGenealogy(individual.dad, distance+1)
+        print(' '*distance, 'dad',distance,': ', end='')
 
     print(individual)
 

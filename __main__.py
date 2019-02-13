@@ -21,7 +21,13 @@ import time
 
 
 class Individual:
+
+    nextId = 0
+
     def __init__(self, chromosome):
+
+        self.id = Individual.nextId
+        Individual.nextId += 1
 
         self.chromosome = chromosome[:]
 
@@ -31,7 +37,7 @@ class Individual:
 
     def __repr__(self):
 
-        return self.toPhenotype() + ' ( ' + str(self.fitness) + ' )'
+        return self.toPhenotype() + ' ( ' + str(self.fitness) + ' ) id : ' + str(self.id)
 
     def toPhenotype(self):
 
@@ -185,7 +191,6 @@ def mutate(chromosome, mutationRate):
 #
 # returns two new childs resulting of the crossover between the 2 given chromosomes
 def cross_over(chrom1, chrom2):
-
     # print('g1 :',g1)
     # print('g2 :',g2)
     # print()
@@ -336,6 +341,11 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         if thisBestInd.fitness > bestInd.fitness:
             bestInd = thisBestInd
             print('new best:', bestInd, ',', genCount, ')')
+            
+            # if bestInd.fitness >= 0.5 :
+                # mutationRate = 0
+                # crossoverProb = 0
+
             lastGenPrint = genCount
 
         fitnessList = [ind.fitness for ind in population]
@@ -357,9 +367,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         if genCount - lastGenPrint == 1000:
             print(
                 'the best:',
-                thisBestInd.toPhenotype(),
-                '(',
-                thisBestInd.fitness,
+                thisBestInd,
                 end='')
             print(', generation #', end='')
             print(genCount, ')')

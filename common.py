@@ -4,7 +4,7 @@ import random
 import os
 import sys
 
-# FIXED_SEED = 83679253667282854847615544598215025854178
+# FIXED_SEED = 78346491646665448331375559176698498067758
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -72,10 +72,11 @@ resetRNG(USED_SEED)
 
 def getFullChoices():
 
-    ACCENTS = 'àâé-èîêûôçïëüäöù'
+    ACCENTS = 'àâéèîêûôçïëüäöù'
+    SPECIALS = '-_°'
     AVAILABLE_CHARS = string.ascii_uppercase + string.digits \
-        + '_' + string.ascii_lowercase + ACCENTS + ' ' \
-        + string.punctuation
+        + string.ascii_lowercase + ACCENTS + ' ' \
+        + string.punctuation + SPECIALS
     return AVAILABLE_CHARS
 
 

@@ -4,10 +4,9 @@ import random
 import os
 import sys
 
-# FIXED_SEED = 78346491646665448331375559176698498067758
+import hideWord
 
-# FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
-# FIXED_HIDDEN_WORD = 'hellohello'
+# FIXED_SEED = 78346491646665448331375559176698498067758
 
 SEED_SIZE = 17
 
@@ -63,7 +62,7 @@ def printSeed(usedSeed):
 
 def resetRNG(usedSeed):
 
-    printSeed(usedSeed)
+    # printSeed(usedSeed)
     random.seed(usedSeed)
 
 
@@ -88,6 +87,7 @@ SIZE_CHOICES = len(getFullChoices())
 # FITNESS_PROGAM = 'ibi_' + ('2017-2018' if WORD_LEN == 10 else
 #                            '2018-2019') + '_fitness_windows.exe'
 
+EXTERNAL_FITNESS_FUNCTION = hideWord.fitness
 
 # Below are the hyper parameters of the algorithms,
 # each one is the average of the values found by the optimization process
@@ -142,13 +142,4 @@ MUTATION_RATE = sum(mutationRates)/len(mutationRates)
 SAVE_TRACE = False
 
 
-try:
-    FIXED_HIDDEN_WORD
-except NameError:
-    print()
-    FIXED_HIDDEN_WORD = ''
-    while len(FIXED_HIDDEN_WORD)<1:
-        FIXED_HIDDEN_WORD = input('Mot à cacher : ')
-
-hiddenWord = FIXED_HIDDEN_WORD
 

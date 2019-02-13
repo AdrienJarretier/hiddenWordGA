@@ -348,6 +348,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             reduce(lambda x, y: x + y, fitnessList) / len(fitnessList)
         })
 
+        print("Génération #", genCount, end = '\r')
+
         # if genCount - lastGenPrint == 1000:
         #     print(
         #         'the best:',

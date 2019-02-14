@@ -6,7 +6,7 @@ import sys
 
 import hideWord
 
-# FIXED_SEED = 78346491646665448331375559176698498067758
+FIXED_SEED = 25722884930703647040619216198646922904054
 
 SEED_SIZE = 17
 
@@ -62,7 +62,7 @@ def printSeed(usedSeed):
 
 def resetRNG(usedSeed):
 
-    # printSeed(usedSeed)
+    printSeed(usedSeed)
     random.seed(usedSeed)
 
 

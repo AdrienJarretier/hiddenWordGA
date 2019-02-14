@@ -4,6 +4,8 @@ from subprocess import check_output
 
 from functools import reduce
 
+from tree import *
+
 import numpy
 import pprint
 import json
@@ -19,17 +21,9 @@ import time
 #
 #
 
-def printGenealogy(individual, distance=0):
-
-    if individual.mum is not None:
-        printGenealogy(individual.mum, distance+1)
-        print(' '*distance, 'mum',distance,': ', end='')
-
-    if individual.dad is not None:
-        printGenealogy(individual.dad, distance+1)
-        print(' '*distance, 'dad',distance,': ', end='')
-
-    print(individual)
+def printGenealogy(individual):
+    
+    printFamilyTree(individual)
 
 class Individual:
 
@@ -420,6 +414,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         # printSeed()
 
         returnToken = runTime
+
+        printGenealogy(bestInd)
 
 
 

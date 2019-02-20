@@ -15,6 +15,7 @@ from random import randint
 import time
 
 MAX_RUN_TIME = 60
+HIDE_ANIMATE = False
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -83,30 +84,32 @@ if __name__ == "__main__":
             print(
                 'Nous brouillons maintenant les pistes pour le faire deviner au programme...')
 
-            time.sleep(2)
+            if HIDE_ANIMATE:
 
-            def hiding(screen):
-                t0 = time.time()
-                while time.time()-t0 < 3:
-                    screen.print_at(np.random.choice(['Encoder', 'Secret', 'Caché', 'Brouiller', 'Mot', 'Inconnu'], 1),
-                                    randint(0, screen.width), randint(
-                                        0, screen.height),
-                                    colour=randint(0, screen.colours - 1),
-                                    bg=randint(0, screen.colours - 1))
-                    ev = screen.get_key()
-                    if ev in (ord('Q'), ord('q')):
-                        return
-                    screen.refresh()
+                time.sleep(2)
 
-            Screen.wrapper(hiding)
-            os.system('cls' if os.name == 'nt' else 'clear')
-            ascii_banner = pyfiglet.figlet_format('Le mot est cache')
-            print(ascii_banner)
-            print('L'+'\''+'algorithme n'+'\'' +
-                  'en a maintenant plus aucune connaissance.')
+                def hiding(screen):
+                    t0 = time.time()
+                    while time.time()-t0 < 3:
+                        screen.print_at(np.random.choice(['Encoder', 'Secret', 'Caché', 'Brouiller', 'Mot', 'Inconnu'], 1),
+                                        randint(0, screen.width), randint(
+                                            0, screen.height),
+                                        colour=randint(0, screen.colours - 1),
+                                        bg=randint(0, screen.colours - 1))
+                        ev = screen.get_key()
+                        if ev in (ord('Q'), ord('q')):
+                            return
+                        screen.refresh()
 
-            input('Appuyez sur Entrer pour le lancement de l' +
-                  '\''+'algorithme génétique')
+                Screen.wrapper(hiding)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                ascii_banner = pyfiglet.figlet_format('Le mot est cache')
+                print(ascii_banner)
+                print('L'+'\''+'algorithme n'+'\'' +
+                    'en a maintenant plus aucune connaissance.')
+
+                input('Appuyez sur Entrer pour le lancement de l' +
+                    '\''+'algorithme génétique')
 
             hideWord.hide(FIXED_HIDDEN_WORD)
 

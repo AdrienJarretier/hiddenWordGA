@@ -83,7 +83,7 @@ if __name__ == "__main__":
             print(
                 'Nous brouillons maintenant les pistes pour le faire deviner au programme...')
 
-            time.sleep(3)
+            time.sleep(2)
 
             def hiding(screen):
                 t0 = time.time()
@@ -104,8 +104,9 @@ if __name__ == "__main__":
             print(ascii_banner)
             print('L'+'\''+'algorithme n'+'\'' +
                   'en a maintenant plus aucune connaissance.')
-            time.sleep(1)
-            print('Lancement de l'+'\''+'algorithme genetique, à vous Mr Yuste.')
+
+            input('Appuyez sur Entrer pour le lancement de l' +
+                  '\''+'algorithme génétique')
 
             hideWord.hide(FIXED_HIDDEN_WORD)
 

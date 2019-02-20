@@ -13,22 +13,54 @@ ascii_banner = pyfiglet.figlet_format(
     'Demonstration d'+'\''+'algorithmes genetiques')
 print(ascii_banner)
 
-time.sleep(1)
+# time.sleep(1)
 
 print('L'+'\''+'aglorithme décrit sur les pancartes de l'+'\'' +
       'exposition va trouver le mot que vous allez soumettre en quelques secondes.')
 
-time.sleep(2)
+# time.sleep(2)
 
 
 print("Tapez votre mot ici, puis appuyez sur Enter : ")
 hw = input()
-ascii_banner = pyfiglet.figlet_format(hw)
+
+
+specialsMap = {
+
+    'àâä': 'a',
+    'éèêë': 'e',
+    'îï': 'i',
+    'ûüù': 'u',
+    'ôö': 'o',
+    'ç': 'c',
+    '°': 'o'
+
+}
+
+bannerWord = ''
+
+for c in hw:
+    replaced = False
+    for key, replacement in specialsMap.items():
+        for keyC in key:
+            if c == keyC:
+                bannerWord += replacement
+                replaced = True
+                break
+        if replaced:
+            break
+    if not replaced:
+        bannerWord += c
+
+print(bannerWord)
+
+
+ascii_banner = pyfiglet.figlet_format(bannerWord)
 print(ascii_banner)
 
 print('Nous brouillons maintenant les pistes pour le faire deviner au programme')
 
-time.sleep(2)
+time.sleep(200)
 
 
 def hiding(screen):

@@ -15,7 +15,7 @@ from random import randint
 import time
 
 MAX_RUN_TIME = 60
-HIDE_ANIMATE = False
+SHOW_ANIMATION = True
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'
@@ -84,7 +84,7 @@ if __name__ == "__main__":
             print(
                 'Nous brouillons maintenant les pistes pour le faire deviner au programme...')
 
-            if HIDE_ANIMATE:
+            if SHOW_ANIMATION:
 
                 time.sleep(2)
 
@@ -108,6 +108,7 @@ if __name__ == "__main__":
                 print('L'+'\''+'algorithme n'+'\'' +
                     'en a maintenant plus aucune connaissance.')
 
+                print()
                 input('Appuyez sur Entrer pour le lancement de l' +
                     '\''+'algorithme génétique')
 

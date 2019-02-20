@@ -58,7 +58,7 @@ print(bannerWord)
 ascii_banner = pyfiglet.figlet_format(bannerWord)
 print(ascii_banner)
 
-print('Nous brouillons maintenant les pistes pour le faire deviner au programme')
+print('Nous brouillons maintenant les pistes pour le faire deviner au programme...')
 
 time.sleep(200)
 

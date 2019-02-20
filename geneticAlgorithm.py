@@ -319,6 +319,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
     plt.title('Fitness of the best individual in time')
 
+    generationsNum = []
+
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
         population = nextGeneration(population, popSize, mutationRate,
@@ -328,7 +330,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         bestIndex = getBestIndex(population)
         thisBestInd = population[bestIndex]
-        fitnesses.append(bestInd.fitness)
+
         if thisBestInd.fitness > bestInd.fitness:
             bestInd = thisBestInd
             # print('new best:', bestInd, ',', genCount, ')')
@@ -336,15 +338,25 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             textLine = 'Meilleur : ' + bestInd.toPhenotype()
 
             print(' ' + textLine, '\n')
-            
-            line1.set_xdata(range(len(fitnesses)))
+
+                
+                    
+            fitnesses.append((1/thisBestInd.fitness)-1)
+            generationsNum.append(genCount)
+            line1.set_xdata(generationsNum)
             line1.set_ydata(fitnesses)
+                
             #plt.title('Fitness of the best individual in time')
             ax.relim()
             ax.autoscale_view()
-            
+            bottom, top = ax.get_ylim()
+            ax.set_ylim(0, top)
+
             fig.canvas.draw()
             fig.canvas.flush_events()
+
+
+            
             
             # if bestInd.fitness >= 0.5 :
                 # mutationRate = 0
@@ -385,7 +397,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     returnToken = -1
 
     if bestInd.fitness == 1:
-        fitnesses.append(1)
+        # fitnesses.append(1)
         foundWord = bestInd.toPhenotype()
 
         print()
@@ -397,12 +409,12 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         print('\nen', runTime, 'seconds\n')
         # printSeed()
-        line1.set_xdata(range(len(fitnesses)))
-        line1.set_ydata(fitnesses)   
-        ax.relim()
-        ax.autoscale_view() 
-        fig.canvas.draw()
-        fig.canvas.flush_events()
+        # line1.set_xdata(range(len(fitnesses)))
+        # line1.set_ydata(fitnesses)   
+        # ax.relim()
+        # ax.autoscale_view() 
+        # fig.canvas.draw()
+        # fig.canvas.flush_events()
         returnToken = runTime
 
     else :

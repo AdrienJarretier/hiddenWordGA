@@ -9,12 +9,14 @@ import os
 import pyfiglet
 
 
-ascii_banner = pyfiglet.figlet_format('Demonstration d'+'\''+'algorithmes genetiques')
+ascii_banner = pyfiglet.figlet_format(
+    'Demonstration d'+'\''+'algorithmes genetiques')
 print(ascii_banner)
 
 time.sleep(1)
 
-print('L'+'\''+'aglorithme décrit sur les pancartes de l'+'\''+'exposition va trouver le mot que vous allez soumettre en quelques secondes.')
+print('L'+'\''+'aglorithme décrit sur les pancartes de l'+'\'' +
+      'exposition va trouver le mot que vous allez soumettre en quelques secondes.')
 
 time.sleep(2)
 
@@ -28,6 +30,7 @@ print('Nous brouillons maintenant les pistes pour le faire deviner au programme'
 
 time.sleep(2)
 
+
 def hiding(screen):
     t0 = time.time()
     while time.time()-t0 < 3:
@@ -39,6 +42,7 @@ def hiding(screen):
         if ev in (ord('Q'), ord('q')):
             return
         screen.refresh()
+
 
 Screen.wrapper(hiding)
 os.system('cls' if os.name == 'nt' else 'clear')

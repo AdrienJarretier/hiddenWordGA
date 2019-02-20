@@ -60,7 +60,7 @@ print(ascii_banner)
 
 print('Nous brouillons maintenant les pistes pour le faire deviner au programme')
 
-time.sleep(200)
+time.sleep(3)
 
 
 def hiding(screen):

@@ -8,20 +8,20 @@ import math
 import time
 from random import randint
 
-
 # def fn():
 #     return randint(0, 40)
 
 
-total = 0
-
 def indivFitness():
     functions = []
     for i in range(1, 9):
+
         def f(i):
             def innerF():
-                return i/10
+                return i / 10
+
             return innerF
+
         functions.append(f(i))
 
     return functions

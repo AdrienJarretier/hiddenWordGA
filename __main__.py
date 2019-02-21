@@ -15,7 +15,7 @@ from random import randint
 import time
 
 MAX_RUN_TIME = 60
-SHOW_ANIMATION = True
+SHOW_ANIMATION = False
 
 # FIXED_HIDDEN_WORD = 'Hey salut toi ça va ?, ça c\'est caca té d\'accord !'
 # FIXED_HIDDEN_WORD = 'hellohello'

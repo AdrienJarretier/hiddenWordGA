@@ -303,9 +303,6 @@ def getBestIndex(pop):
 
 # ------------------------------------------------------
 
-
-
-
 # Run the genetic algorithm with given parameters and set a max run time
 #
 # popSize : populaiton size : int
@@ -348,7 +345,6 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         nonlocal bestInd
         nonlocal population
         nonlocal genCount
-    
 
         population = nextGeneration(population, popSize, mutationRate,
                                     crossoverProb, ratioSelectedParents)
@@ -413,20 +409,13 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         #     print(genCount, ')')
         #     lastGenPrint = genCount
 
-
-     
     def indivFitness():
         functions = []
         for i in range(0, 20):
 
             def f(i):
                 def innerF():
-                    
-                    if i == 0:
-                        runGaLoop()
-
                     return population[i].fitness
-
 
                 return innerF
 
@@ -457,9 +446,23 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         ]
 
         scenes.append(Scene(effects, -1))
-        screen.play(scenes, stop_on_resize=True)
 
-    Screen.wrapper(barChart)
+        screen.set_scenes(scenes)
+        
+        while bestInd.fitness < 1 and time.time() - start_time < maxTime:
+            runGaLoop()
+            screen.draw_next_frame()
+
+
+        # screen.play(scenes, stop_on_resize=True)
+
+    if PLOT_FITNESS:
+
+        Screen.wrapper(barChart)
+
+    else:
+        while bestInd.fitness < 1 and time.time() - start_time < maxTime:
+            runGaLoop()
 
     returnToken = -1
 

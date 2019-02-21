@@ -411,7 +411,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     def indivFitness():
         functions = []
-        for i in range(0, 20):
+        for i in range(0, 1):
 
             def f(i):
                 def innerF():
@@ -423,26 +423,35 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         return functions
 
+    # def keys():
+    #     k = []
+    #     for i in range(3):
+    #         k.append(population[i].toPhenotype())
+
+
+    #     return k
+
     def barChart(screen):
         scenes = []
         effects = [
             Print(
                 screen,
                 BarChart(
-                    10,
+                    2,
                     70,
                     indivFitness(),
                     colour=[c for c in range(1, 8)],
-                    bg=[c for c in range(1, 8)],
-                    scale=2.0,
+                    bg=[6],
+                    scale=1.0,
                     axes=BarChart.X_AXIS,
-                    intervals=0.5,
                     labels=True,
-                    border=False),
+                    border=False,
+                    intervals=0.5,
+                    keys=['Rapprochement de la solution']
+                    ),
                 x=3,
                 y=13,
-                transparent=False,
-                speed=2)
+                transparent=False)
         ]
 
         scenes.append(Scene(effects, -1))

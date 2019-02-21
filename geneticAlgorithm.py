@@ -15,11 +15,9 @@ if SHOW_PLOT:
 import pyfiglet
 
 
-
 def filterSpecials(text):
 
     specialsMap = {
-
         'àâä': 'a',
         'éèêë': 'e',
         'îï': 'i',
@@ -27,7 +25,6 @@ def filterSpecials(text):
         'ôö': 'o',
         'ç': 'c',
         '°': 'o'
-
     }
 
     bannerWord = ''
@@ -46,6 +43,7 @@ def filterSpecials(text):
             bannerWord += c
 
     return bannerWord
+
 
 # ------------------------------------------------------
 
@@ -75,7 +73,8 @@ class Individual:
 
     def __repr__(self):
 
-        return self.toPhenotype() + ' ( ' + str(self.fitness) + ' ) id : ' + str(self.id)
+        return self.toPhenotype() + ' ( ' + str(
+            self.fitness) + ' ) id : ' + str(self.id)
 
     def toPhenotype(self):
 
@@ -94,11 +93,10 @@ def fullFitness(population):
 
         indiv.fitness = EXTERNAL_FITNESS_FUNCTION(indiv)
 
+
 # ------------------------------------------------------
 
-
 # # ------------------------------------------------------
-
 
 # def fullFitness(genPopulation):
 
@@ -126,7 +124,6 @@ def fullFitness(population):
 #         scores.append(score)
 #         genPopulation[genIndexSorted[i]].fitness = score
 
-
 # # ------------------------------------------------------
 
 
@@ -138,7 +135,6 @@ def generateRandom():
 
 
 # ------------------------------------------------------
-
 
 # chromosome : the chromosome to mutate : list of ints
 # mutationRate : The chance for each gene to be randomly replaced by another value : float
@@ -157,7 +153,6 @@ def generateRandom():
 #     return newChrom
 
 
-
 def mutate(chromosome, mutationRate):
 
     MUTATION_DELETION = 0
@@ -173,26 +168,26 @@ def mutate(chromosome, mutationRate):
 
         if random.random() < chance:
 
-            if len(newChrom)==1:
-                mutationType = random.randint(1,2)
+            if len(newChrom) == 1:
+                mutationType = random.randint(1, 2)
             else:
-                mutationType = random.randint(0,2)
+                mutationType = random.randint(0, 2)
 
             if mutationType == MUTATION_DELETION:
 
-                deletePosition = random.randint(0,len(newChrom)-1)
+                deletePosition = random.randint(0, len(newChrom) - 1)
                 del newChrom[deletePosition]
 
             elif mutationType == MUTATION_ADDITION:
 
-                insertPosition = random.randint(0,len(newChrom))
-                newChrom.insert(insertPosition, random.randint(0, SIZE_CHOICES - 1))
+                insertPosition = random.randint(0, len(newChrom))
+                newChrom.insert(insertPosition,
+                                random.randint(0, SIZE_CHOICES - 1))
 
             elif mutationType == MUTATION_SUBSTITUTION:
 
-                substPosition = random.randint(0,len(newChrom)-1)
+                substPosition = random.randint(0, len(newChrom) - 1)
                 newChrom[substPosition] = random.randint(0, SIZE_CHOICES - 1)
-
 
     # for i in range(len(chromosome)):
     #     char = chromosome[i]
@@ -236,6 +231,7 @@ def cross_over(chrom1, chrom2):
 
 # ------------------------------------------------------
 
+
 # pop : list of Indivduals
 # count : the quantity of individuals to select by roulette wheel
 #
@@ -250,6 +246,7 @@ def wheel_select(pop, count):
 
 # ------------------------------------------------------
 
+
 # popSize : the number of individuals in the population : int
 #
 # return list of Individuals of len popSize
@@ -259,6 +256,7 @@ def generateRandomPopulation(popSize):
         pop.append(Individual(generateRandom()))
 
     return pop
+
 
 # ------------------------------------------------------
 
@@ -294,8 +292,10 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
     newPop = []
 
     while len(newPop) < popSize:
-        mumChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
-        dadChrom = selected[random.randint(0, parentsSelectedCount - 1)].chromosome[:]
+        mumChrom = selected[random.randint(
+            0, parentsSelectedCount - 1)].chromosome[:]
+        dadChrom = selected[random.randint(
+            0, parentsSelectedCount - 1)].chromosome[:]
 
         if random.random() < crossoverProb / 100:
             c1, c2 = cross_over(mumChrom, dadChrom)
@@ -322,8 +322,8 @@ def nextGeneration(population, popSize, mutationRate, crossoverProb,
 def getBestIndex(pop):
     return numpy.argmax(list(map(lambda x: x.fitness, pop)))
 
-# ------------------------------------------------------
 
+# ------------------------------------------------------
 
 # Run the genetic algorithm with given parameters and set a max run time
 #
@@ -349,14 +349,17 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     obsels = []
     fitnesses = []
-    
+
     if SHOW_PLOT:
         plt.ion()
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
-        plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
+        line1, = ax.plot(
+            [], fitnesses,
+            'r-')  # Returns a tuple of line objects, thus the comma
+        plt.title('Nombre de différences entre le meilleur' + '\n' +
+                  'individu et le mot à trouver')
 
     if SHOW_PLOT:
         generationsNum = []
@@ -374,20 +377,22 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         if thisBestInd.fitness > bestInd.fitness:
             bestInd = thisBestInd
             # print('new best:', bestInd, ',', genCount, ')')
-            
-            textLine = 'Meilleur mot : ' + bestInd.toPhenotype()
+
+            distStr = str(int(1 / bestInd.fitness - 1))
+            padding = 3 - len(distStr)
+
+            textLine = 'Meilleur mot (distance : ' + ' ' * padding + distStr + ') : ' + bestInd.toPhenotype(
+            )
 
             print(' ' + textLine, '\n')
 
-                
             if SHOW_PLOT:
-                    
-                fitnesses.append((1/thisBestInd.fitness)-1)
+
+                fitnesses.append((1 / thisBestInd.fitness) - 1)
                 generationsNum.append(genCount)
                 line1.set_xdata(generationsNum)
                 line1.set_ydata(fitnesses)
-                    
-                
+
                 #plt.title('Fitness of the best individual in time')
                 ax.relim()
                 ax.autoscale_view()
@@ -397,12 +402,9 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
                 fig.canvas.draw()
                 fig.canvas.flush_events()
 
-
-            
-            
             # if bestInd.fitness >= 0.5 :
-                # mutationRate = 0
-                # crossoverProb = 0
+            # mutationRate = 0
+            # crossoverProb = 0
 
             lastGenPrint = genCount
 
@@ -421,11 +423,8 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             'meanFitness':
             reduce(lambda x, y: x + y, fitnessList) / len(fitnessList)
         })
-        
-        
-            
 
-        print(" Génération #", genCount, end = '\r')
+        print(" Génération #", genCount, end='\r')
 
         # if genCount - lastGenPrint == 1000:
         #     print(
@@ -440,7 +439,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     if bestInd.fitness == 1:
         # fitnesses.append(1)
-        
+
         print('\nLe mot a été trouvé!')
         foundWord = bestInd.toPhenotype()
         ascii_banner = pyfiglet.figlet_format(filterSpecials(foundWord))
@@ -449,38 +448,37 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
         runTime = time.time() - start_time
 
-        print('\nen', runTime, 'secondes\n')
+        print('\nen',
+              int(runTime * 10) / 10, 'secondes et', genCount, 'générations\n')
         # printSeed()
         # line1.set_xdata(range(len(fitnesses)))
-        # line1.set_ydata(fitnesses)   
+        # line1.set_ydata(fitnesses)
         # ax.relim()
-        # ax.autoscale_view() 
+        # ax.autoscale_view()
         # fig.canvas.draw()
         # fig.canvas.flush_events()
         returnToken = runTime
 
-    else :
+    else:
 
         foundWord = bestInd.toPhenotype()
-
 
         print("\n\n L'algorithme n'a pas trouvé la solution exacte")
         print(" en moins de", maxTime, "secondes.\n")
 
         label = "Plus proche trouvé : "
 
-        print(' '*(3+len(label)),'-'*(len(foundWord)+4))
-        print('',label,': |', foundWord, '|')
-        print(' '*(3+len(label)),'-'*(len(foundWord)+4))
+        print(' ' * (3 + len(label)), '-' * (len(foundWord) + 4))
+        print('', label, ': |', foundWord, '|')
+        print(' ' * (3 + len(label)), '-' * (len(foundWord) + 4))
 
         runTime = time.time() - start_time
 
-        print('\nen', runTime, 'seconds\n')
+        print('\nen',
+              int(runTime * 10) / 10, 'secondes et', genCount, 'générations\n')
         # printSeed()
 
         returnToken = runTime
-
-
 
     if SAVE_TRACE and returnToken != -1:
 
@@ -514,8 +512,10 @@ parametersValues = [
 # ------------------------------------------------------
 ########################################################
 
+
 def reset():
     Individual.nextId = 0
+
 
 def main(maxRunTime):
 
@@ -537,13 +537,11 @@ def main(maxRunTime):
     # ]
 
     ranges = [
-
-        [POP_SIZE, POP_SIZE-1, 1],  # POP
-        [MUTATION_RATE, MUTATION_RATE-1, 1],  # MUT
-        [CROSS_OVER_PROB, CROSS_OVER_PROB-1, 1],  # CROSS
-        [RATIO_SELECTED_PARENTS,
-         RATIO_SELECTED_PARENTS-1, 1]  # RATIO_SELECTED_PARENTS
-
+        [POP_SIZE, POP_SIZE - 1, 1],  # POP
+        [MUTATION_RATE, MUTATION_RATE - 1, 1],  # MUT
+        [CROSS_OVER_PROB, CROSS_OVER_PROB - 1, 1],  # CROSS
+        [RATIO_SELECTED_PARENTS, RATIO_SELECTED_PARENTS - 1,
+         1]  # RATIO_SELECTED_PARENTS
     ]
 
     # store the results of the optimization loops
@@ -583,7 +581,8 @@ def main(maxRunTime):
             bestValue = parametersValues[parameterUsedId]
 
             # +1):
-            for v in range(minValue, maxValue+ranges[parameterUsedId][2], ranges[parameterUsedId][2]):
+            for v in range(minValue, maxValue + ranges[parameterUsedId][2],
+                           ranges[parameterUsedId][2]):
 
                 vs = [
                     POP_SIZE, MUTATION_RATE, CROSS_OVER_PROB,
@@ -607,15 +606,14 @@ def main(maxRunTime):
                     print('timeout')
 
             if maxTime > -1:
-                bestValues.append(
-                    '   ' + str(bestValue) + ', # ' + str(USED_SEED) + '   ')
+                bestValues.append('   ' + str(bestValue) + ', # ' +
+                                  str(USED_SEED) + '   ')
                 bestTimes.append(maxTime)
 
         result = {
             'parameter': parameters[parameterUsedId],
             'bestValues': bestValues
             # ,'bestTimes': bestTimes
-
         }
         results.append(result)
 

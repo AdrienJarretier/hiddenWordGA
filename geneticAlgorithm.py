@@ -452,6 +452,15 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
                 x=3,
                 y=13,
                 transparent=False)
+
+            #     ,
+
+            # Print(
+            #     screen,
+            #     FigletText(" Generation # " + str(genCount), font=u'nancyj'),
+            #     x=3,
+            #     y=15
+            # )
         ]
 
         scenes.append(Scene(effects, -1))

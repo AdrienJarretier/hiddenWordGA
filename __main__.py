@@ -40,7 +40,7 @@ if __name__ == "__main__":
             # time.sleep(1)
 
             print(
-                'L' + '\'' + 'aglorithme décrit sur les pancartes de l' +
+                'L' + '\'' + 'algorithme décrit sur les pancartes de l' +
                 '\'' +
                 'exposition va trouver le mot que vous allez soumettre en quelques secondes.'
             )

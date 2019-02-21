@@ -15,14 +15,21 @@ from random import randint
 
 total = 0
 
-def wv(x):
-    def f():
-        global total
-        total = (total + 0.01) % 2
-        return total
+def indivFitness():
+    functions = []
+    for i in range(1, 9):
+        def f(i):
+            def innerF():
+                return i/10
+            return innerF
+        functions.append(f(i))
 
-    return f
-    # return lambda: 1 + math.sin(math.pi * (2 * time.time() + x) / 5)
+    return functions
+
+
+# print(indivFitness())
+
+# time.sleep(156)
 
 
 def barChart(screen):
@@ -33,10 +40,7 @@ def barChart(screen):
             BarChart(
                 10,
                 70,
-                [wv(1), wv(2),
-                 wv(3), wv(4),
-                 wv(5), wv(7),
-                 wv(8), wv(9)],
+                indivFitness(),
                 colour=[c for c in range(1, 8)],
                 bg=[c for c in range(1, 8)],
                 scale=2.0,

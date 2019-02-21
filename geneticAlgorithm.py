@@ -8,7 +8,7 @@ import numpy
 import pprint
 import json
 import time
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pyfiglet
 
 # ------------------------------------------------------
@@ -314,12 +314,12 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     obsels = []
     fitnesses = []
     
-    plt.ion()
+    # plt.ion()
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
-    plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
+    # plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
 
     generationsNum = []
 
@@ -345,17 +345,17 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
                     
             fitnesses.append((1/thisBestInd.fitness)-1)
             generationsNum.append(genCount)
-            line1.set_xdata(generationsNum)
-            line1.set_ydata(fitnesses)
+            # line1.set_xdata(generationsNum)
+            # line1.set_ydata(fitnesses)
                 
-            #plt.title('Fitness of the best individual in time')
-            ax.relim()
-            ax.autoscale_view()
-            bottom, top = ax.get_ylim()
-            ax.set_ylim(0, top)
+            # #plt.title('Fitness of the best individual in time')
+            # ax.relim()
+            # ax.autoscale_view()
+            # bottom, top = ax.get_ylim()
+            # ax.set_ylim(0, top)
 
-            fig.canvas.draw()
-            fig.canvas.flush_events()
+            # fig.canvas.draw()
+            # fig.canvas.flush_events()
 
 
             

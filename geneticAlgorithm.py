@@ -9,6 +9,8 @@ import pprint
 import json
 import time
 import matplotlib.pyplot as plt
+import pyfiglet
+
 # ------------------------------------------------------
 
 # A class representing one individual in the populatio
@@ -317,7 +319,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
-    plt.title('Fitness of the best individual in time')
+    plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
 
     generationsNum = []
 
@@ -335,7 +337,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             bestInd = thisBestInd
             # print('new best:', bestInd, ',', genCount, ')')
             
-            textLine = 'Meilleur : ' + bestInd.toPhenotype()
+            textLine = 'Meilleur mot : ' + bestInd.toPhenotype()
 
             print(' ' + textLine, '\n')
 
@@ -398,16 +400,16 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
 
     if bestInd.fitness == 1:
         # fitnesses.append(1)
+        
+        print('\nLe mot a été trouvé!')
         foundWord = bestInd.toPhenotype()
-
+        ascii_banner = pyfiglet.figlet_format(foundWord)
+        print(ascii_banner)
         print()
-        print(' '*9,'-'*(len(foundWord)+4))
-        print(' Trouvé : |', foundWord, '|')
-        print(' '*9,'-'*(len(foundWord)+4))
 
         runTime = time.time() - start_time
 
-        print('\nen', runTime, 'seconds\n')
+        print('\nen', runTime, 'secondes\n')
         # printSeed()
         # line1.set_xdata(range(len(fitnesses)))
         # line1.set_ydata(fitnesses)   
@@ -425,7 +427,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         print("\n\n L'algorithme n'a pas trouvé la solution exacte")
         print(" en moins de", maxTime, "secondes.\n")
 
-        label = "Plus proche trouvé"
+        label = "Plus proche trouvé : "
 
         print(' '*(3+len(label)),'-'*(len(foundWord)+4))
         print('',label,': |', foundWord, '|')

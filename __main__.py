@@ -97,8 +97,6 @@ if __name__ == "__main__":
                                         colour=randint(0, screen.colours - 1),
                                         bg=randint(0, screen.colours - 1))
                         ev = screen.get_key()
-                        if ev in (ord('Q'), ord('q')):
-                            return
                         screen.refresh()
 
                 Screen.wrapper(hiding)
@@ -115,3 +113,6 @@ if __name__ == "__main__":
             hideWord.hide(FIXED_HIDDEN_WORD)
 
             geneticAlgorithm.main(MAX_RUN_TIME)
+            
+            print()
+            input('Appuyez sur Entrer pour relancer le programme')

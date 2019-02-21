@@ -8,8 +8,44 @@ import numpy
 import pprint
 import json
 import time
-import matplotlib.pyplot as plt
+
+if SHOW_PLOT:
+    import matplotlib.pyplot as plt
+
 import pyfiglet
+
+
+
+def filterSpecials(text):
+
+    specialsMap = {
+
+        'àâä': 'a',
+        'éèêë': 'e',
+        'îï': 'i',
+        'ûüù': 'u',
+        'ôö': 'o',
+        'ç': 'c',
+        '°': 'o'
+
+    }
+
+    bannerWord = ''
+
+    for c in text:
+        replaced = False
+        for key, replacement in specialsMap.items():
+            for keyC in key:
+                if c == keyC:
+                    bannerWord += replacement
+                    replaced = True
+                    break
+            if replaced:
+                break
+        if not replaced:
+            bannerWord += c
+
+    return bannerWord
 
 # ------------------------------------------------------
 
@@ -314,14 +350,16 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
     obsels = []
     fitnesses = []
     
-    plt.ion()
+    if SHOW_PLOT:
+        plt.ion()
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
-    plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        line1, = ax.plot([], fitnesses, 'r-') # Returns a tuple of line objects, thus the comma
+        plt.title('Nombre de différences entre le meilleur'+'\n'+'individu et le mot à trouver')
 
-    generationsNum = []
+    if SHOW_PLOT:
+        generationsNum = []
 
     while bestInd.fitness < 1 and time.time() - start_time < maxTime:
 
@@ -342,20 +380,22 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
             print(' ' + textLine, '\n')
 
                 
+            if SHOW_PLOT:
                     
-            fitnesses.append((1/thisBestInd.fitness)-1)
-            generationsNum.append(genCount)
-            line1.set_xdata(generationsNum)
-            line1.set_ydata(fitnesses)
+                fitnesses.append((1/thisBestInd.fitness)-1)
+                generationsNum.append(genCount)
+                line1.set_xdata(generationsNum)
+                line1.set_ydata(fitnesses)
+                    
                 
-            #plt.title('Fitness of the best individual in time')
-            ax.relim()
-            ax.autoscale_view()
-            bottom, top = ax.get_ylim()
-            ax.set_ylim(0, top)
+                #plt.title('Fitness of the best individual in time')
+                ax.relim()
+                ax.autoscale_view()
+                bottom, top = ax.get_ylim()
+                ax.set_ylim(0, top)
 
-            fig.canvas.draw()
-            fig.canvas.flush_events()
+                fig.canvas.draw()
+                fig.canvas.flush_events()
 
 
             
@@ -403,7 +443,7 @@ def runGA(popSize, maxTime, mutationRate, crossoverProb, ratioSelectedParents):
         
         print('\nLe mot a été trouvé!')
         foundWord = bestInd.toPhenotype()
-        ascii_banner = pyfiglet.figlet_format(foundWord)
+        ascii_banner = pyfiglet.figlet_format(filterSpecials(foundWord))
         print(ascii_banner)
         print()
 

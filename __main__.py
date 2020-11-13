@@ -8,10 +8,9 @@ from asciimatics.screen import Screen
 from asciimatics.effects import Cycle, Stars
 from asciimatics.renderers import FigletText
 from asciimatics.scene import Scene
-import numpy as np
 import os
 import pyfiglet
-from random import randint
+import random
 import time
 
 MAX_RUN_TIME = 60
@@ -67,17 +66,18 @@ if __name__ == "__main__":
                 time.sleep(2)
 
                 def hiding(screen):
+
                     t0 = time.time()
                     while time.time() - t0 < 3:
                         screen.print_at(
-                            np.random.choice([
+                            random.choice([
                                 'Encoder', 'Secret', 'Caché', 'Brouiller',
-                                'Mot', 'Inconnu'
-                            ], 1),
-                            randint(0, screen.width),
-                            randint(0, screen.height),
-                            colour=randint(0, screen.colours - 1),
-                            bg=randint(0, screen.colours - 1))
+                                -                                'Mot', 'Inconnu'
+                            ]),
+                            random.randint(0, screen.width),
+                            random.randint(0, screen.height),
+                            colour=random.randint(0, screen.colours - 1),
+                            bg=random.randint(0, screen.colours - 1))
                         ev = screen.get_key()
                         screen.refresh()
 

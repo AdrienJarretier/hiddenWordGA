@@ -71,8 +71,7 @@ if __name__ == "__main__":
                     while time.time() - t0 < 3:
                         screen.print_at(
                             random.choice([
-                                'Encoder', 'Secret', 'Caché', 'Brouiller',
-                                -                                'Mot', 'Inconnu'
+                                'Encoder', 'Secret', 'Caché', 'Brouiller', 'Mot', 'Inconnu'
                             ]),
                             random.randint(0, screen.width),
                             random.randint(0, screen.height),

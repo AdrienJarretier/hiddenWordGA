@@ -4,9 +4,6 @@ def fitness(individual):
 
     indivPhenotype = individual.toPhenotype()
 
-    # print('dfsddfsfsdfsd')
-    # print(indivPhenotype)
-
     distance = abs(len(hiddenWord) - len(indivPhenotype))
 
     for i in range(min(len(hiddenWord), len(indivPhenotype))):

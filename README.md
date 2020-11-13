@@ -5,7 +5,7 @@ Projet pédagogique - UE Intelligence Bio Inspirée - Module Algorithme Généti
 Des modifications ont été apportées pour ajouter de l'intéractivité (en proposant à un utilisateur de rentrer le mot à trouver) dans le cadre d'une médiation sur le thème de l'IA à la médiathèque de Bron
 
 ## Langage
-  * Python 3.7 to 3.8.5
+  * Python 3.8.5
 
 ## Install
 

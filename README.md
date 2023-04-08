@@ -78,5 +78,6 @@ une mutation d'un individu peut supprimer, ajouter ou remplacer un caractère pa
  
  # Authors
  
+- ### Oceane Cassan
 - ### Hugo Castaneda
 - ### Adrien Jarretier-Yuste
